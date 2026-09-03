@@ -1,0 +1,269 @@
+---
+const chapters = [
+  {
+    id: "pcvr",
+    tag: "VR",
+    title: "PCVR Brand Activation",
+    summary: "A PCVR experience built for a live brand activation — designed to run reliably in front of a walk-up public audience over multiple days.",
+    accent: "violet",
+  },
+  {
+    id: "healthcare",
+    tag: "VR / Simulation",
+    title: "Healthcare Training Simulation",
+    summary: "A VR training simulation for procedural practice, built around repeatable, measurable scenarios rather than a one-off demo.",
+    accent: "teal",
+  },
+  {
+    id: "heli",
+    tag: "Simulation",
+    title: "Geospatial Helicopter Simulator",
+    summary: "A flight simulation built on real-world terrain data, integrating Cesium geospatial tooling with the I-nstein platform.",
+    accent: "magenta",
+  },
+  {
+    id: "heritage",
+    tag: "VR",
+    title: "Heritage Site Experience",
+    summary: "An interactive recreation of a heritage site, built end to end for public exhibition.",
+    accent: "violet",
+  },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scroll prototype · Propane Games</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <a href="/projects" class="back-link">← Back to site</a>
+
+    <nav class="dot-nav" aria-label="Chapter navigation">
+      {chapters.map((c) => (
+        <button class="dot" data-target={c.id} aria-label={`Go to ${c.title}`}>
+          <span class="dot-tooltip">{c.title}</span>
+        </button>
+      ))}
+    </nav>
+
+    <main>
+      {chapters.map((c, i) => (
+        <section class="chapter" id={c.id} data-index={i}>
+          <div class="chapter-sticky">
+            <div class="chapter-visual" data-accent={c.accent}>
+              <span class="chapter-number">{String(i + 1).padStart(2, "0")}</span>
+            </div>
+            <div class="chapter-text">
+              <span class="chapter-tag">{c.tag}</span>
+              <h2 class="chapter-title">{c.title}</h2>
+              <p class="chapter-summary">{c.summary}</p>
+            </div>
+          </div>
+        </section>
+      ))}
+    </main>
+
+    <style is:global>
+      * { box-sizing: border-box; }
+      html { background: #0e0e16; }
+      body {
+        margin: 0;
+        color: #f1f0f7;
+        font-family: "Inter", sans-serif;
+        background: #0e0e16;
+      }
+      h2 { font-family: "Space Grotesk", sans-serif; font-weight: 600; margin: 0; }
+
+      .back-link {
+        position: fixed;
+        top: 24px;
+        left: 24px;
+        z-index: 20;
+        color: #9a96ac;
+        text-decoration: none;
+        font-size: 0.85rem;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(6px);
+      }
+      .back-link:hover { color: #f1f0f7; }
+
+      /* Each chapter is a tall scroll track; the inner content stays pinned
+         via position: sticky while you scroll through that track, and
+         reveals in stages driven by the --progress custom property. */
+      .chapter {
+        height: 220vh;
+        position: relative;
+        --f-tag: clamp(0, calc(var(--progress, 0) / 0.18), 1);
+        --f-title: clamp(0, calc((var(--progress, 0) - 0.10) / 0.22), 1);
+        --f-summary: clamp(0, calc((var(--progress, 0) - 0.24) / 0.22), 1);
+        --f-visual-in: clamp(0, calc(var(--progress, 0) / 0.3), 1);
+        --f-visual-out: clamp(0, calc((var(--progress, 0) - 0.78) / 0.22), 1);
+      }
+
+      .chapter-sticky {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6vw;
+        padding: 0 8vw;
+        overflow: hidden;
+      }
+
+      .chapter-visual {
+        flex: 0 0 auto;
+        width: min(36vw, 400px);
+        height: min(36vw, 400px);
+        border-radius: 28px;
+        display: flex;
+        align-items: flex-end;
+        padding: 28px;
+        opacity: calc(var(--f-visual-in) - var(--f-visual-out));
+        transform:
+          scale(calc(0.85 + var(--f-visual-in) * 0.15 - var(--f-visual-out) * 0.1))
+          translateY(calc((1 - var(--f-visual-in)) * 30px - var(--f-visual-out) * 20px));
+      }
+      .chapter-visual[data-accent="violet"] { background: linear-gradient(135deg, #7c5cff, #3a2b8c); }
+      .chapter-visual[data-accent="teal"] { background: linear-gradient(135deg, #22d3b8, #146b5c); }
+      .chapter-visual[data-accent="magenta"] { background: linear-gradient(135deg, #ff5ca8, #7a2652); }
+      .chapter-number {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: rgba(255,255,255,0.6);
+      }
+
+      .chapter-text { max-width: 420px; }
+
+      .chapter-tag {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #9a96ac;
+        border: 1px solid #2a2836;
+        border-radius: 999px;
+        padding: 5px 14px;
+        margin-bottom: 16px;
+        opacity: var(--f-tag);
+        transform: translateY(calc((1 - var(--f-tag)) * 16px));
+      }
+
+      .chapter-title {
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        margin-bottom: 14px;
+        opacity: var(--f-title);
+        transform: translateY(calc((1 - var(--f-title)) * 24px));
+      }
+
+      .chapter-summary {
+        color: #9a96ac;
+        line-height: 1.6;
+        opacity: var(--f-summary);
+        transform: translateY(calc((1 - var(--f-summary)) * 20px));
+      }
+
+      .dot-nav {
+        position: fixed;
+        right: 32px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .dot {
+        position: relative;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: transparent;
+        border: 1.5px solid #4a4658;
+        padding: 0;
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      }
+      .dot:hover { transform: scale(1.3); border-color: #f1f0f7; }
+      .dot.active {
+        background: linear-gradient(135deg, #7c5cff, #ff5ca8);
+        border-color: transparent;
+        transform: scale(1.3);
+      }
+      .dot-tooltip {
+        position: absolute;
+        right: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        white-space: nowrap;
+        font-size: 0.78rem;
+        color: #f1f0f7;
+        background: #1c1b28;
+        border: 1px solid #2a2836;
+        padding: 5px 10px;
+        border-radius: 6px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease;
+      }
+      .dot:hover .dot-tooltip { opacity: 1; }
+
+      @media (max-width: 780px) {
+        .chapter { height: 260vh; }
+        .chapter-sticky { flex-direction: column; justify-content: center; gap: 32px; text-align: center; }
+        .chapter-visual { width: 55vw; height: 55vw; }
+        .dot-nav { right: 14px; gap: 14px; }
+        .dot-tooltip { display: none; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .chapter-tag, .chapter-title, .chapter-summary, .chapter-visual {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      }
+    </style>
+
+    <script>
+      const chapters = document.querySelectorAll<HTMLElement>(".chapter");
+      const dots = document.querySelectorAll<HTMLButtonElement>(".dot");
+
+      function update() {
+        let activeIndex = 0;
+        const viewportMid = window.innerHeight / 2;
+
+        chapters.forEach((chapter, i) => {
+          const rect = chapter.getBoundingClientRect();
+          const scrollDistance = rect.height - window.innerHeight;
+          const progress = scrollDistance > 0
+            ? Math.min(Math.max(-rect.top / scrollDistance, 0), 1)
+            : 0;
+          chapter.style.setProperty("--progress", progress.toString());
+
+          if (rect.top <= viewportMid && rect.bottom >= viewportMid) {
+            activeIndex = i;
+          }
+        });
+
+        dots.forEach((dot, i) => dot.classList.toggle("active", i === activeIndex));
+        requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+
+      dots.forEach((dot) => {
+        dot.addEventListener("click", () => {
+          const target = document.getElementById(dot.dataset.target ?? "");
+          target?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+    </script>
+  </body>
+</html>

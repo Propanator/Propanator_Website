@@ -1,0 +1,58 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout title="Contact">
+  <section class="intro">
+    <h1>Contact</h1>
+    <p>Available for new freelance contract work in VR, simulation, and UE5 development.</p>
+  </section>
+
+  <section class="channels">
+    <a class="channel" href="mailto:louischarles.lamanna@icloud.com">
+      <span class="label">Email</span>
+      <span class="value">louischarles.lamanna@icloud.com</span>
+    </a>
+    <a class="channel" href="https://www.upwork.com/freelancers/~01d363ad82ef101190" target="_blank" rel="noopener">
+      <span class="label">Upwork</span>
+      <span class="value">View profile</span>
+    </a>
+    <a class="channel" href="https://www.linkedin.com/in/louis-charles-la-manna-harvey-244191164/" target="_blank" rel="noopener">
+      <span class="label">LinkedIn</span>
+      <span class="value">Connect</span>
+    </a>
+  </section>
+
+  <style>
+    .intro { padding: 64px 0 44px; max-width: 560px; }
+    .intro h1 { font-size: clamp(1.9rem, 3.6vw, 2.4rem); margin-bottom: 14px; }
+    .intro p { color: var(--muted); }
+
+    .channels {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 480px;
+      margin-bottom: 70px;
+    }
+    .channel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .channel:hover {
+      border-color: var(--violet-soft);
+      transform: translateY(-2px);
+    }
+    .label {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .value { color: var(--violet); font-size: 0.92rem; }
+  </style>
+</Layout>

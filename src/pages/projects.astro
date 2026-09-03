@@ -1,0 +1,335 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const projects = [
+  {
+    id: "pcvr",
+    title: "PCVR Brand Activation",
+    tags: ["VR"],
+    accent: "violet",
+    image: "",
+    summary: "PCVR experience built for a live brand activation event.",
+    details: "PCVR experience built for a live brand activation event. Designed to run reliably in front of a walk-up public audience over multiple days, with a tight setup/reset loop between sessions.",
+    role: "Lead UE5 developer — build, optimization, on-site deployment.",
+    stack: "Unreal Engine 5, C++, VR interaction systems",
+  },
+  {
+    id: "healthcare",
+    title: "Healthcare Training Simulation",
+    tags: ["VR", "Simulation"],
+    accent: "teal",
+    image: "",
+    summary: "VR training simulation for healthcare procedure practice.",
+    details: "A VR training simulation for healthcare procedure practice, built around repeatable, measurable training scenarios rather than a one-off demo experience.",
+    role: "Systems and interaction programming for procedural training flows.",
+    stack: "Unreal Engine 5, C++, VR",
+  },
+  {
+    id: "heli",
+    title: "Geospatial Helicopter Simulator",
+    tags: ["Simulation"],
+    accent: "magenta",
+    image: "",
+    summary: "Geospatial flight simulation built on real-world terrain data.",
+    details: "A geospatial flight simulation built on real-world terrain data, integrating Cesium's geospatial platform with the I-nstein simulation framework for accurate terrain and flight behavior.",
+    role: "Integrated Cesium geospatial data with the I-nstein simulation platform.",
+    stack: "Unreal Engine 5, C++, Cesium, networking",
+  },
+  {
+    id: "heritage",
+    title: "Heritage Site Experience",
+    tags: ["VR"],
+    accent: "violet",
+    image: "",
+    summary: "Interactive experience recreating a heritage site for public exhibition.",
+    details: "An interactive VR experience recreating a heritage site for public exhibition, built end to end from environment art integration to visitor-facing interaction design.",
+    role: "Environment and interaction build, end to end.",
+    stack: "Unreal Engine 5, C++",
+  },
+];
+
+const allTags = ["All", ...new Set(projects.flatMap((p) => p.tags))];
+---
+<Layout title="Projects" description="VR, simulation, and game development projects by Louis-Charles La Manna.">
+  <section class="intro">
+    <h1>Projects</h1>
+    <p>A selection of shipped VR and simulation work — from live brand activations to
+      training and geospatial tools.</p>
+  </section>
+
+  <div class="filters" role="group" aria-label="Filter projects by category">
+    {allTags.map((tag, i) => (
+      <button class="filter-btn" data-tag={tag} aria-pressed={i === 0 ? "true" : "false"}>
+        {tag}
+      </button>
+    ))}
+  </div>
+
+  <section class="project-grid">
+    {projects.map((p) => (
+      <article
+        class="project"
+        data-tags={p.tags.join(",")}
+        data-project-id={p.id}
+        tabindex="0"
+        role="button"
+        aria-label={`View details for ${p.title}`}
+      >
+        <div class="project-thumb" data-accent={p.accent}>
+          {p.image ? <img src={p.image} alt={p.title} /> : <span class="thumb-placeholder">Add image</span>}
+        </div>
+        <div class="project-body">
+          <div class="tags">
+            {p.tags.map((t) => <span class="tag">{t}</span>)}
+          </div>
+          <h2>{p.title}</h2>
+          <p class="summary">{p.summary}</p>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <!-- Detail overlay -->
+  <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+      <div class="modal-image" id="modalImage"></div>
+      <div class="modal-body">
+        <div class="tags" id="modalTags"></div>
+        <h2 id="modalTitle"></h2>
+        <p id="modalDetails"></p>
+        <dl>
+          <div><dt>Role</dt><dd id="modalRole"></dd></div>
+          <div><dt>Stack</dt><dd id="modalStack"></dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .intro { padding: 64px 0 32px; max-width: 560px; }
+    .intro h1 { font-size: clamp(1.9rem, 3.6vw, 2.4rem); margin-bottom: 14px; }
+    .intro p { color: var(--muted); }
+
+    .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 36px; }
+    .filter-btn {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: var(--muted);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+    .filter-btn:hover { color: var(--text); border-color: var(--violet-soft); }
+    .filter-btn[aria-pressed="true"] {
+      color: #fff;
+      background: linear-gradient(135deg, var(--violet), var(--magenta));
+      border-color: transparent;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 70px;
+    }
+    .project {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .project:hover, .project:focus-visible {
+      border-color: var(--violet-soft);
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    .project-thumb {
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .project-thumb[data-accent="violet"] { background: linear-gradient(135deg, #7c5cff, #3a2b8c); }
+    .project-thumb[data-accent="teal"] { background: linear-gradient(135deg, #22d3b8, #146b5c); }
+    .project-thumb[data-accent="magenta"] { background: linear-gradient(135deg, #ff5ca8, #7a2652); }
+    .project-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .thumb-placeholder {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.7);
+      border: 1px dashed rgba(255,255,255,0.4);
+      padding: 6px 12px;
+      border-radius: 999px;
+    }
+
+    .project-body { padding: 20px; }
+    .tags { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--violet);
+      background: var(--violet-soft);
+      border-radius: 999px;
+      padding: 4px 12px;
+    }
+    .project h2 { font-size: 1.05rem; margin-bottom: 8px; }
+    .summary { color: var(--muted); font-size: 0.9rem; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 8, 14, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 50;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .modal {
+      background: var(--panel-raised);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      max-width: 560px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+      transform: translateY(12px) scale(0.98);
+      transition: transform 0.2s ease;
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 2;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.4);
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .modal-close:hover { background: rgba(0,0,0,0.6); }
+
+    .modal-image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background-size: cover;
+      background-position: center;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .modal-body { padding: 28px; }
+    .modal-body h2 { font-size: 1.4rem; margin-bottom: 14px; }
+    .modal-body p { color: var(--text); margin-bottom: 22px; line-height: 1.65; }
+    .modal-body dl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 0; }
+    .modal-body dt { font-family: var(--font-display); font-size: 0.78rem; color: var(--muted); margin-bottom: 4px; }
+    .modal-body dd { margin: 0; font-size: 0.9rem; }
+
+    @media (max-width: 640px) {
+      .project-grid { grid-template-columns: 1fr; }
+      .modal-body dl { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <script>
+    const buttons = document.querySelectorAll<HTMLButtonElement>(".filter-btn");
+    const cards = document.querySelectorAll<HTMLElement>(".project");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        buttons.forEach((b) => b.setAttribute("aria-pressed", "false"));
+        btn.setAttribute("aria-pressed", "true");
+        const tag = btn.dataset.tag;
+        cards.forEach((c) => {
+          const tags = c.dataset.tags?.split(",") ?? [];
+          const show = tag === "All" || tags.includes(tag ?? "");
+          (c as HTMLElement).style.display = show ? "" : "none";
+        });
+      });
+    });
+  </script>
+
+  <script define:vars={{ projects }}>
+    const cards = document.querySelectorAll(".project");
+    const overlay = document.getElementById("modalOverlay");
+    const modalImage = document.getElementById("modalImage");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDetails = document.getElementById("modalDetails");
+    const modalTags = document.getElementById("modalTags");
+    const modalRole = document.getElementById("modalRole");
+    const modalStack = document.getElementById("modalStack");
+    const closeBtn = document.getElementById("modalClose");
+
+    function openModal(project) {
+      modalTitle.textContent = project.title;
+      modalDetails.textContent = project.details;
+      modalRole.textContent = project.role;
+      modalStack.textContent = project.stack;
+      modalTags.innerHTML = "";
+      project.tags.forEach((t) => {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = t;
+        modalTags.appendChild(span);
+      });
+      if (project.image) {
+        modalImage.style.backgroundImage = `url(${project.image})`;
+        modalImage.style.display = "";
+      } else {
+        modalImage.style.display = "none";
+      }
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      closeBtn.focus();
+    }
+
+    function closeModal() {
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    cards.forEach((card) => {
+      const openThis = () => {
+        const project = projects.find((p) => p.id === card.dataset.projectId);
+        if (project) openModal(project);
+      };
+      card.addEventListener("click", openThis);
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openThis();
+        }
+      });
+    });
+
+    closeBtn.addEventListener("click", closeModal);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+    });
+  </script>
+</Layout>

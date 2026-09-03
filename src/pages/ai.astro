@@ -1,0 +1,84 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const capabilities = [
+  {
+    title: "Character asset generation",
+    detail: "Reference-conditioned image generation for concept and character work, with fine-tuned models for consistent likeness across a project.",
+  },
+  {
+    title: "LoRA fine-tuning",
+    detail: "Training custom LoRAs so generated characters and assets stay consistent across scenes rather than drifting between generations.",
+  },
+  {
+    title: "Image-to-video previs",
+    detail: "Turning static concept frames into short motion previs — useful for pitching a sequence or animation direction before committing production time.",
+  },
+  {
+    title: "Pipeline engineering",
+    detail: "Building and maintaining ComfyUI node graphs end to end, including GPU/driver-level troubleshooting to keep pipelines production-stable.",
+  },
+];
+---
+<Layout title="AI" description="AI-assisted content pipelines for game development — character generation, LoRA training, and previs.">
+  <section class="intro">
+    <h1>AI-assisted <span class="grad">content pipelines</span></h1>
+    <p>
+      Alongside engine and gameplay work, I build AI generation pipelines that speed up early
+      production — concept art, character consistency, and quick previs — without replacing the
+      craft of a real art or design pass.
+    </p>
+  </section>
+
+  <section class="capabilities">
+    {capabilities.map((c) => (
+      <div class="cap">
+        <h2>{c.title}</h2>
+        <p>{c.detail}</p>
+      </div>
+    ))}
+  </section>
+
+  <style>
+    .intro { padding: 64px 0 44px; max-width: 620px; }
+    .intro h1 { font-size: clamp(1.9rem, 3.6vw, 2.4rem); margin-bottom: 16px; }
+    .intro h1 .grad {
+      background: linear-gradient(135deg, var(--teal), var(--violet));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .intro p { color: var(--muted); font-size: 1.02rem; }
+
+    .capabilities {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 70px;
+    }
+    .cap {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .cap:hover {
+      border-color: var(--teal-soft);
+      transform: translateY(-2px);
+    }
+    .cap h2 {
+      font-size: 1.02rem;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    .cap p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 640px) {
+      .capabilities { grid-template-columns: 1fr; }
+    }
+  </style>
+</Layout>

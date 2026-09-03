@@ -1,0 +1,76 @@
+---
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scroll debug</title>
+  </head>
+  <body>
+    <div id="readout">progress: 0</div>
+
+    <div class="track">
+      <div class="pin">
+        <div class="box"></div>
+      </div>
+    </div>
+
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; background: #111; }
+      body { font-family: monospace; }
+
+      #readout {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 50;
+        color: #fff;
+        background: #000;
+        padding: 8px 14px;
+        font-size: 14px;
+      }
+
+      .track {
+        height: 300vh;
+        background: repeating-linear-gradient(#111, #111 40px, #1a1a1a 40px, #1a1a1a 80px);
+      }
+
+      .pin {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .box {
+        width: 120px;
+        height: 120px;
+        background: red;
+        transform: translateX(calc(var(--progress, 0) * 80vw));
+      }
+    </style>
+
+    <script>
+      const track = document.querySelector<HTMLElement>(".track");
+      const readout = document.getElementById("readout");
+
+      function update() {
+        if (track) {
+          const rect = track.getBoundingClientRect();
+          const scrollDistance = rect.height - window.innerHeight;
+          const progress = scrollDistance > 0
+            ? Math.min(Math.max(-rect.top / scrollDistance, 0), 1)
+            : 0;
+          track.style.setProperty("--progress", progress.toString());
+          if (readout) readout.textContent = "progress: " + progress.toFixed(3);
+        }
+        requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    </script>
+  </body>
+</html>
