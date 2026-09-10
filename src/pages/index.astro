@@ -1,5 +1,20 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import {
+  siUnrealengine,
+  siUnity,
+  siGodotengine,
+  siDavinciresolve,
+  siBlender,
+  siMeta,
+  siHtcvive,
+  siSteam,
+} from "simple-icons";
+// simple-icons dropped Visual Studio after v7, so the mark is vendored from
+// that release and its single path pulled out at build time.
+import visualStudioSvg from "../icons/visual-studio.svg?raw";
+
+const siVisualstudio = { path: visualStudioSvg.match(/ d="([^"]+)"/)?.[1] ?? "" };
 
 const specialties = [
   { label: "VR Development", detail: "Full-cycle VR builds for PCVR and standalone, from prototype to shipped brand activation." },
@@ -7,103 +22,466 @@ const specialties = [
   { label: "AI-Assisted Pipelines", detail: "ComfyUI-based generation pipelines for character and environment content." },
   { label: "Level & Systems Design", detail: "Gameplay systems and level design grounded in agile, team-based production." },
 ];
+
+const cards = [
+  { src: "/images/card-neverboard.png", alt: "Never Board" },
+  { src: "/images/card-heli-sim.png", alt: "Geospatial helicopter simulator" },
+  { src: "/images/card-flamingo.png", alt: "State Street Global Advisors — DIA" },
+];
+
+// Marks are inlined at build time, so the strip costs no extra requests.
+// Varjo's own logo is a wordmark, so it rides as text rather than a glyph.
+const tech = [
+  { name: "Unreal Engine", path: siUnrealengine.path },
+  { name: "Unity", path: siUnity.path },
+  { name: "Godot", path: siGodotengine.path },
+  { name: "Visual Studio", path: siVisualstudio.path },
+  { name: "DaVinci Resolve", path: siDavinciresolve.path },
+  { name: "Blender", path: siBlender.path },
+  { name: "Meta Quest", path: siMeta.path },
+  { name: "Varjo", word: "Varjo" },
+  { name: "HTC Vive", path: siHtcvive.path },
+  { name: "Steam", path: siSteam.path },
+];
+
 ---
 <Layout title="Home">
-  <section class="hero">
-    <h1>Senior Unreal Engine developer, <span class="grad">built for VR and simulation.</span></h1>
-    <p class="hero-sub">
-      7+ years shipping VR experiences, training simulations, and geospatial tools in UE5 and C++.
-      Freelance under Propane Games — currently taking on new contract work.
-    </p>
-    <a class="cta" href="/contact">Get in touch</a>
-  </section>
+  <!-- The line threads the whole page, so it lives outside .showcase and
+       spans this wrapper: hero through demo reel. -->
+  <div class="threaded" data-line="straight">
+    <!-- One single continuous path, threading hero -> work -> specialties ->
+         About -> demo reel. Its geometry is measured from the real positions of
+         those blocks at runtime; a fixed viewBox stretched over the page put
+         the line through the hero copy on wide screens, because its coordinates
+         had no relationship to where anything actually sits. -->
+    <svg class="squiggle-line" preserveAspectRatio="none" aria-hidden="true">
+      <path
+        id="squigglePath"
+        fill="none"
+        stroke="#ff5ca8"
+        stroke-width="5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
 
-  <section class="specialties">
-    {specialties.map((s) => (
-      <div class="specialty">
-        <h3>{s.label}</h3>
-        <p>{s.detail}</p>
-      </div>
-    ))}
-  </section>
+    <div class="showcase full-bleed">
+      <section class="hero">
+        <div class="hero-scrim" aria-hidden="true"></div>
+        <div class="hero-inner">
+          <h1>Every project, <span>built to ship.</span></h1>
+          <p class="hero-sub">
+            7+ years shipping VR experiences, training simulations, and geospatial tools in UE5 and C++.
+            Freelance under Propane Games — currently taking on new contract work.
+          </p>
+          <div class="cta-row">
+            <div class="cta-squiggle" aria-hidden="true"></div>
+            <a class="cta" href="/contact">Find out more</a>
+          </div>
+        </div>
+      </section>
 
-  <section class="bio">
-    <h2>About</h2>
-    <p>
-      Resourceful senior Unreal Engine developer and level designer with over seven years of
-      experience specializing in VR development, simulation, and networking. I hold an AEC in
-      Level and Game Design from Interdec College and work fluently in both French and English.
-      My work spans PCVR brand activations, healthcare training simulations, a geospatial
-      helicopter simulator built on Cesium, and heritage site experiences — with a growing focus
-      on AI-assisted content pipelines to speed up asset and previz work.
-    </p>
-  </section>
+      <div class="bridge-band" aria-hidden="true"></div>
 
-  <section class="reel">
-    <h2>Demo reel</h2>
-    <div class="reel-grid">
-      <div class="video-wrap">
-        <iframe
-          src="https://www.youtube.com/embed/MtKvIDYAfFk?wmode=transparent&rel=0"
-          title="Propane Games demo reel"
-          loading="lazy"
-          allowfullscreen
-        ></iframe>
-      </div>
-      <div class="video-wrap">
-        <iframe
-          src="https://www.youtube.com/embed/oyMxiVD2zH8?wmode=transparent&rel=0"
-          title="Level design walkthrough"
-          loading="lazy"
-          allowfullscreen
-        ></iframe>
+      <section class="about" id="about">
+        <div class="about-inner">
+          <div class="about-copy">
+            <p class="eyebrow">About me</p>
+            <h2>Louis Charles La Manna</h2>
+            <p>
+              Resourceful senior Unreal Engine developer and level designer with over seven years of
+              experience specializing in VR development, simulation, and networking. I hold an AEC in
+              Level and Game Design from Interdec College and work fluently in both French and English.
+            </p>
+            <p>
+              My work spans PCVR brand activations, healthcare training simulations, a geospatial
+              helicopter simulator built on Cesium, and heritage site experiences — with a growing focus
+              on AI-assisted content pipelines to speed up asset and previz work.
+            </p>
+            <div class="about-actions">
+              <a class="about-link" href="/projects">See the work →</a>
+              <a class="about-link" href="/contact">Get in touch →</a>
+            </div>
+          </div>
+          <figure class="about-photo">
+            <img
+              src="/images/about-louis.jpg"
+              alt="Louis-Charles La Manna"
+              width="900"
+              height="1546"
+              loading="lazy"
+            />
+          </figure>
+        </div>
+      </section>
+
+      <!-- Identical tracks laid end to end; the rail slides exactly one track
+           width and restarts, so the loop has no visible seam. Two are rendered
+           here as the no-JS floor; the script below clones as many more as the
+           viewport needs, so the rail always overflows the screen. -->
+      <section class="techstrip" aria-label="Tools and platforms">
+        <div class="tech-rail">
+          {[0, 1].map((copy) => (
+            <ul class="tech-track" aria-hidden={copy === 1 ? "true" : undefined}>
+              {tech.map((t) => (
+                <li class="tech-item" title={t.name}>
+                  {t.path ? (
+                    <svg viewBox="0 0 24 24" role="img" aria-label={t.name}>
+                      <path d={t.path} />
+                    </svg>
+                  ) : (
+                    <span class="tech-word">{t.word}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ))}
+        </div>
+      </section>
+
+      <section class="work" id="work">
+        <div class="cards-wrap">
+          <div class="cards">
+            {cards.map((c) => (
+              <div class="card">
+                <img src={c.src} alt={c.alt} loading="lazy" />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="work-text">
+          <h2>World-class builds, for world-class studios</h2>
+          <p>A mix of shipped brand activations, simulation platforms, and creative experiments —
+            see the full breakdown on the projects page.</p>
+          <a class="work-link" href="/projects">View all projects →</a>
+        </div>
+      </section>
+
+      <!-- Continues from the wave: down the right edge, along the bottom of
+           specialties, then down further and around the About section too. -->
+      <div class="frame-zone">
+        <section class="specialties">
+          <div class="specialties-inner">
+            {specialties.map((s) => (
+              <div class="specialty">
+                <h3>{s.label}</h3>
+                <p>{s.detail}</p>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
-  </section>
+
+    <section class="reel">
+      <h2>Demo reel</h2>
+      <div class="reel-grid">
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/MtKvIDYAfFk?wmode=transparent&rel=0"
+            title="Propane Games demo reel"
+            loading="lazy"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/oyMxiVD2zH8?wmode=transparent&rel=0"
+            title="Level design walkthrough"
+            loading="lazy"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </section>
+  </div>
 
   <style>
+    /* Breaks these sections out of Layout's 960px-constrained <main>,
+       so the hero/band/squiggle/cards can go full viewport width
+       while the sections below stay in the normal reading-width column. */
+    .full-bleed {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+    }
+
+    /* Containing block for the full-bleed line layer, which has to reach
+       past .showcase and down through the demo reel. */
+    .threaded { position: relative; }
+
+    .showcase { position: relative; overflow: hidden; }
+
     .hero {
-      padding: 88px 0 60px;
-      max-width: 640px;
+      position: relative;
+      min-height: 78vh;
+      display: flex;
+      align-items: center;
+      background-color: #0e0e16;
+      background-image: url("/images/hero-vr-headset.jpg");
+      background-size: cover;
+      /* The headset sits centre-frame; biasing right keeps it clear of the
+         left-aligned copy as the viewport narrows. */
+      background-position: 68% center;
+      background-repeat: no-repeat;
+      overflow: hidden;
     }
-    .hero h1 {
-      font-size: clamp(2.1rem, 4.4vw, 3rem);
-      margin-bottom: 20px;
+
+    /* Darkens the photo under the copy and carries the brand violet across it,
+       so the headline keeps contrast without flattening the image on the right. */
+    .hero-scrim {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(12,11,22,0.94) 0%, rgba(12,11,22,0.82) 38%, rgba(12,11,22,0.30) 70%, rgba(12,11,22,0.15) 100%),
+        linear-gradient(120deg, rgba(74,63,217,0.55) 0%, rgba(124,92,255,0.28) 55%, rgba(160,107,255,0.10) 100%);
+      pointer-events: none;
     }
-    .hero h1 .grad {
-      background: linear-gradient(135deg, var(--violet), var(--magenta));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: clamp(480px, 42vw, 720px);
+      padding: 0 6vw;
     }
+    .hero-inner h1 {
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      line-height: 1.08;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      color: #f1f0f7;
+      margin: 0 0 20px;
+    }
+    .hero-inner h1 span { color: #ffd45c; }
     .hero-sub {
-      color: var(--muted);
-      font-size: 1.05rem;
-      max-width: 520px;
+      color: rgba(255,255,255,0.85);
+      font-size: clamp(1rem, 1.1vw, 1.15rem);
+      max-width: 480px;
       margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .cta-row { position: relative; display: inline-flex; align-items: center; }
+    .cta-squiggle {
+      position: absolute;
+      left: -34px;
+      top: -46px;
+      width: 22px;
+      height: 90px;
+      border-left: 3px solid #ff5ca8;
+      border-radius: 60% 40% 60% 40% / 50% 60% 40% 50%;
+      opacity: 0.85;
+      pointer-events: none;
     }
     .cta {
       display: inline-block;
-      padding: 13px 26px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--violet), var(--magenta));
+      padding: 15px 30px;
+      background: #14131c;
       color: #fff;
-      font-family: var(--font-display);
+      font-family: "Space Grotesk", sans-serif;
       font-weight: 600;
-      font-size: 0.95rem;
-      box-shadow: 0 0 0 rgba(124, 92, 255, 0);
-      transition: box-shadow 0.2s ease, transform 0.2s ease;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: transform 0.15s ease;
     }
-    .cta:hover {
-      box-shadow: 0 8px 30px var(--violet-soft);
-      transform: translateY(-1px);
+    .cta:hover { transform: translateY(-2px); }
+
+    /* Diagonal band bleeding across the hero/work seam */
+    .bridge-band {
+      position: absolute;
+      top: 55vh;
+      right: 8%;
+      width: 12vw;
+      min-width: 130px;
+      height: 42vh;
+      background: linear-gradient(160deg, #ffd45c, #ffb020);
+      transform: skewX(-18deg);
+      z-index: 5;
+      pointer-events: none;
     }
 
-    .specialties {
+    /* Gentle wave squiggle drawn across the seam between hero and work */
+    /* Full viewport width, full height of .threaded, so the line can wrap the
+       page edges rather than the 960px reading column. */
+    .squiggle-line {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      margin-left: -50vw;
+      width: 100vw;
+      height: 100%;
+      z-index: 7;
+      pointer-events: none;
+    }
+
+    /* Sits above .bridge-band so the yellow diagonal runs out of the hero and
+       disappears behind the portrait rather than crossing over it. */
+    .about {
+      position: relative;
+      z-index: 6;
+      padding: 110px 8vw 90px;
+    }
+    .about-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: 6vw;
+      align-items: center;
+    }
+    .about-copy .eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--magenta);
+      margin-bottom: 14px;
+    }
+    .about-copy h2 {
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      margin-bottom: 22px;
+    }
+    .about-copy p + p { margin-top: 16px; }
+    .about-copy p:not(.eyebrow) { color: var(--muted); }
+    .about-actions { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 28px; }
+    .about-link { color: var(--magenta); font-weight: 600; font-size: 0.92rem; }
+    .about-link:hover { text-decoration: underline; }
+
+    .about-photo { margin: 0; position: relative; }
+    /* Violet wash behind the portrait, offset down-left, tying it to the hero. */
+    .about-photo::before {
+      content: "";
+      position: absolute;
+      inset: 24px -18px -22px 22px;
+      border-radius: var(--radius);
+      background: linear-gradient(150deg, var(--violet), var(--magenta));
+      opacity: 0.28;
+      filter: blur(2px);
+    }
+    .about-photo img {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 620px;
+      object-fit: cover;
+      object-position: 50% 22%;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    }
+
+    /* Tech strip: one continuous rail of marks, full page width. */
+    .techstrip {
+      position: relative;
+      z-index: 6;
+      padding: 30px 0 34px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: rgba(22, 21, 31, 0.6);
+      overflow: hidden;
+      /* Fades the marks out at both edges so items enter and leave the rail
+         instead of popping at a hard boundary. */
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+    }
+    .tech-rail {
+      display: flex;
+      width: max-content;
+      /* Fallback for no-JS: two rendered tracks, shifted by half the rail. */
+      animation: tech-scroll 42s linear infinite;
+    }
+    /* Once the script has measured a real track, the rail travels exactly one
+       track width in px at a fixed speed. The count of tracks then no longer
+       affects the pace, and every restart lands on an identical frame. */
+    .tech-rail[data-measured] {
+      animation-name: tech-scroll-measured;
+      animation-duration: var(--tech-dur, 42s);
+    }
+    .techstrip:hover .tech-rail { animation-play-state: paused; }
+    .tech-track {
+      display: flex;
+      align-items: center;
+      gap: 66px;
+      padding-right: 66px;
+    }
+    .tech-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 38px;
+      color: var(--text);
+      opacity: 0.5;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+    .tech-item:hover { opacity: 1; color: #fff; }
+    .tech-item svg { height: 34px; width: auto; fill: currentColor; }
+    .tech-word {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1.15rem;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    @keyframes tech-scroll {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0); }
+    }
+    @keyframes tech-scroll-measured {
+      from { transform: translateX(calc(var(--tech-shift) * -1)); }
+      to { transform: translateX(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .tech-rail { animation: none; }
+    }
+    .work {
+      position: relative;
+      background: #0e0e16;
+      padding: 110px 8vw 130px;
+      display: flex;
+      gap: 6vw;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .cards-wrap { position: relative; }
+
+    .cards { position: relative; z-index: 1; display: flex; }
+    .card {
+      width: 200px;
+      height: 340px;
+      overflow: hidden;
+      clip-path: polygon(24% 0%, 100% 0%, 76% 100%, 0% 100%);
+      margin-left: -34px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.5);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .card:first-child { margin-left: 0; }
+    .card:hover { transform: translateY(-8px); box-shadow: 0 26px 50px rgba(124,92,255,0.35); }
+    .card img { width: 100%; height: 100%; object-fit: cover; }
+
+    .work-text { max-width: 460px; position: relative; z-index: 1; }
+    .work-text h2 { font-family: "Space Grotesk", sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 18px; color: #f1f0f7; }
+    .work-text p { color: #9a96ac; line-height: 1.6; margin-bottom: 20px; }
+    .work-link { color: #ff5ca8; font-weight: 600; text-decoration: none; font-size: 0.92rem; }
+    .work-link:hover { text-decoration: underline; }
+
+    /* Restyled specialties/bio/reel below, matching site's normal design tokens */
+    .frame-zone { position: relative; }
+
+    .specialties { padding: 70px 8vw 100px; position: relative; z-index: 1; }
+    .specialties-inner {
+      max-width: 960px;
+      margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
-      margin-bottom: 80px;
     }
     .specialty {
       background: var(--panel);
@@ -112,35 +490,14 @@ const specialties = [
       padding: 24px;
       transition: border-color 0.2s ease, transform 0.2s ease;
     }
-    .specialty:hover {
-      border-color: var(--violet-soft);
-      transform: translateY(-2px);
-    }
-    .specialty h3 {
-      font-size: 1rem;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-    .specialty p {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
+    .specialty:hover { border-color: var(--violet-soft); transform: translateY(-2px); }
+    .specialty h3 { font-size: 1rem; color: var(--text); margin-bottom: 8px; }
+    .specialty p { color: var(--muted); font-size: 0.9rem; }
 
-    .bio, .reel { margin-bottom: 80px; }
-    .bio h2, .reel h2 {
-      font-size: 1.3rem;
-      margin-bottom: 20px;
-    }
-    .bio p {
-      max-width: 680px;
-      color: var(--text);
-    }
+    .reel { margin-bottom: 120px; }
+    .reel h2 { font-size: 1.3rem; margin-bottom: 20px; }
 
-    .reel-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
+    .reel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .video-wrap {
       position: relative;
       padding-top: 56.25%;
@@ -149,17 +506,353 @@ const specialties = [
       border-radius: var(--radius);
       overflow: hidden;
     }
-    .video-wrap iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
+    .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
+    @media (max-width: 780px) {
+      .hero { min-height: 60vh; background-position: 60% center; }
+      /* The copy runs full width here, so the scrim has to cover the photo evenly. */
+      .hero-scrim {
+        background:
+          linear-gradient(90deg, rgba(12,11,22,0.94) 0%, rgba(12,11,22,0.86) 60%, rgba(12,11,22,0.70) 100%),
+          linear-gradient(120deg, rgba(74,63,217,0.50) 0%, rgba(160,107,255,0.18) 100%);
+      }
+      .hero-inner { max-width: 100%; padding: 0 7vw; }
+      .bridge-band { width: 22vw; right: 3%; }
+      .work { flex-direction: column; align-items: flex-start; padding: 90px 6vw; }
+      .card { width: 130px; height: 240px; margin-left: -22px; }
+      .about { padding: 80px 6vw 70px; }
+      .about-inner { grid-template-columns: 1fr; gap: 40px; }
+      /* The portrait is full width when stacked, so it gets cropped shorter
+         rather than running the length of the screen. */
+      .about-photo { max-width: 420px; }
+      .about-photo img { max-height: 440px; }
+      .tech-track { gap: 46px; padding-right: 46px; }
+      .tech-item svg { height: 28px; }
+      .tech-word { font-size: 1rem; }
+    }
     @media (max-width: 640px) {
-      .specialties { grid-template-columns: 1fr; }
+      .specialties-inner { grid-template-columns: 1fr; }
       .reel-grid { grid-template-columns: 1fr; }
     }
+
+    /* Below this width the reel would otherwise run to the page edge, leaving
+       the line no lane to travel down beside it. */
+    @media (max-width: 1120px) {
+      .reel { padding: 0 46px; }
+    }
+    @media (max-width: 560px) {
+      .reel { padding: 0 30px; }
+    }
   </style>
+
+  <script>
+    const line = document.getElementById("squigglePath") as unknown as SVGPathElement | null;
+    const svg = line?.closest("svg") as SVGSVGElement | null;
+    const threaded = document.querySelector<HTMLElement>(".threaded");
+    const hero = document.querySelector<HTMLElement>(".hero");
+    const work = document.querySelector<HTMLElement>(".work");
+    const specialties = document.querySelector<HTMLElement>(".specialties-inner");
+    const about = document.querySelector<HTMLElement>(".about-inner");
+    const tech = document.querySelector<HTMLElement>(".techstrip");
+    const reel = document.querySelector<HTMLElement>(".reel");
+
+    if (line && svg && threaded && hero && work && specialties && about && tech && reel) {
+      const svgEl = svg;
+      const wrap = threaded;
+      const heroEl = hero;
+      const workEl = work;
+      const specEl = specialties;
+      const aboutEl = about;
+      const techEl = tech;
+      const reelEl = reel;
+      const pathEl = line;
+
+      const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), hi);
+      const round = (v: number) => Math.round(v * 10) / 10;
+
+      // Two versions of the line. "smooth" is the default; "straight" drops the
+      // squiggle entirely and draws the bare route. Flip the data-line attribute
+      // on .threaded to change the default, or append ?line=straight / ?line=smooth
+      // to the URL to compare the two without editing anything.
+      const requested = new URLSearchParams(window.location.search).get("line");
+      const straight = (requested || wrap.dataset.line || "smooth") === "straight";
+
+      // Where the drawing tip should sit in the viewport: 0 = top, 1 = bottom.
+      const TIP = 0.82;
+      // How much horizontal path travel counts as "descent" when pacing the
+      // draw. The sideways runs cover no vertical ground, so without this they
+      // would have to draw instantly.
+      const HORIZONTAL_WEIGHT = 0.05;
+      const SAMPLES = 640;
+
+      // The squiggle rides the whole route as a sine offset along its length,
+      // rather than being a wave on the first segment and straight lines after.
+      // Long wavelength against a small amplitude keeps it a slow swell — about
+      // three humps across the hero — instead of a tight ripple.
+      const amplitudeFor = (w: number) => (straight ? 0 : clamp(w * 0.01, 7, 16));
+      const wavelengthFor = (w: number) => clamp(w / 1.5, 320, 1400);
+      // Corner radius of the underlying route. Clamped per corner to half the
+      // shorter neighbouring run, so long runs get wide sweeping bends.
+      const radiusFor = (w: number) => clamp(w * 0.09, 40, 180);
+
+      type Pt = { x: number; y: number };
+
+      // Hidden path used only to measure the route before the squiggle is
+      // applied. It never paints; it exists so the browser can hand back
+      // arc-length positions and tangents along the corners for us.
+      const spine = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      spine.setAttribute("fill", "none");
+      spine.setAttribute("stroke", "none");
+      svgEl.appendChild(spine);
+
+      // Walks a list of waypoints, rounding each turn.
+      function route(pts: Pt[], radius: number): string {
+        let d = "M " + pts[0].x + " " + pts[0].y;
+        for (let i = 1; i < pts.length - 1; i++) {
+          const p = pts[i];
+          const prev = pts[i - 1];
+          const next = pts[i + 1];
+          const dIn = Math.hypot(p.x - prev.x, p.y - prev.y) || 1;
+          const dOut = Math.hypot(next.x - p.x, next.y - p.y) || 1;
+          const r = Math.min(radius, dIn / 2, dOut / 2);
+          const aX = p.x + ((prev.x - p.x) / dIn) * r;
+          const aY = p.y + ((prev.y - p.y) / dIn) * r;
+          const bX = p.x + ((next.x - p.x) / dOut) * r;
+          const bY = p.y + ((next.y - p.y) / dOut) * r;
+          d += " L " + aX + " " + aY + " Q " + p.x + " " + p.y + ", " + bX + " " + bY;
+        }
+        const last = pts[pts.length - 1];
+        d += " L " + last.x + " " + last.y;
+        return d;
+      }
+
+      // Samples the route and pushes each point sideways along its own normal
+      // by a sine of the distance travelled. Because the offset follows the
+      // route's tangent, the swell carries through the corners and down the
+      // vertical runs instead of stopping at the first bend. With amp 0 this
+      // just re-emits the route, which is the straight version.
+      function squiggle(amp: number, wavelength: number): string {
+        const total = spine.getTotalLength();
+        if (!(total > 0)) return "";
+        // Fine enough that the sine and the corner bends both read as smooth.
+        const step = amp === 0 ? 12 : clamp(wavelength / 90, 5, 14);
+        const count = Math.max(2, Math.ceil(total / step));
+        let d = "";
+        for (let i = 0; i <= count; i++) {
+          const at = (total * i) / count;
+          const p = spine.getPointAtLength(at);
+          let x = p.x;
+          let y = p.y;
+          if (amp !== 0) {
+            const a = spine.getPointAtLength(Math.max(0, at - 1));
+            const b = spine.getPointAtLength(Math.min(total, at + 1));
+            let tx = b.x - a.x;
+            let ty = b.y - a.y;
+            const m = Math.hypot(tx, ty) || 1;
+            tx /= m;
+            ty /= m;
+            const off = amp * Math.sin((at / wavelength) * Math.PI * 2);
+            x -= ty * off;
+            y += tx * off;
+          }
+          d += (i === 0 ? "M " : " L ") + round(x) + " " + round(y);
+        }
+        return d;
+      }
+
+      let length = 0;
+      let totalDescent = 1;
+      const arcAt = new Float64Array(SAMPLES + 1);
+      const descentAt = new Float64Array(SAMPLES + 1);
+      let startY = 0;
+      let boxHeight = 0;
+      // Arc length at which the line has already crossed the middle of the
+      // screen. The line never draws less than this, so it reads as an
+      // established line running off both edges rather than growing from a dot.
+      let leadArc = 0;
+
+      function build() {
+        // The layer is full-viewport-width while .threaded is the reading
+        // column, so x and width come from the SVG itself.
+        const base = svgEl.getBoundingClientRect();
+        const W = base.width;
+        const H = base.height;
+        if (W <= 0 || H <= 0) return;
+
+        // Every anchor is read off the real element, relative to the layer.
+        const top = (el: HTMLElement) => el.getBoundingClientRect().top - base.top;
+        const bottom = (el: HTMLElement) => el.getBoundingClientRect().bottom - base.top;
+        const between = (a: number, b: number) => a + (b - a) / 2;
+
+        const amp = amplitudeFor(W);
+        // Gutters sit near the page edges so the line wraps the whole page,
+        // not the content column.
+        const inset = clamp(W * 0.03, 14, 70);
+        const xL = inset;
+        const xR = W - inset;
+        const overshoot = Math.max(amp * 3, 44);
+
+        const seam = bottom(heroEl);                              // hero photo edge
+        const gapAbout = between(bottom(aboutEl), top(techEl));   // under About, over the tech strip
+        const gapWork = between(bottom(workEl), top(specEl));     // under "world-class", over the boxes
+        const gapSpec = between(bottom(specEl), top(reelEl));     // under the boxes, over the demo reel
+        const belowReel = between(bottom(reelEl), H);             // under the demo reel
+
+        spine.setAttribute(
+          "d",
+          route(
+            [
+              { x: -overshoot, y: seam }, // enters from off the left edge
+              { x: xR, y: seam },
+              { x: xR, y: gapAbout },
+              { x: xL, y: gapAbout },
+              { x: xL, y: gapWork },
+              { x: xR, y: gapWork },
+              { x: xR, y: gapSpec },
+              { x: xL, y: gapSpec },
+              { x: xL, y: belowReel }, // down the side of the demo reel
+              { x: xR, y: belowReel },
+              { x: xR, y: H + overshoot }, // and runs off the bottom of the page
+            ],
+            radiusFor(W),
+          ),
+        );
+
+        svgEl.setAttribute("viewBox", "0 0 " + W + " " + H);
+        pathEl.setAttribute("d", squiggle(amp, wavelengthFor(W)));
+
+        length = pathEl.getTotalLength();
+        if (!(length > 0)) {
+          pathEl.style.strokeDasharray = "none";
+          pathEl.style.strokeDashoffset = "0";
+          return;
+        }
+        pathEl.style.strokeDasharray = length.toString();
+
+        // Dash offset advances in arc length, but scrolling moves vertically,
+        // and the sideways runs cover no vertical ground at all. Tabulate
+        // "descent travelled" against arc length so the tip can be placed by
+        // height rather than trailing behind by however much sideways line
+        // happens to sit above it.
+        let prev = pathEl.getPointAtLength(0);
+        startY = prev.y;
+        let descent = 0;
+        leadArc = 0;
+        for (let i = 1; i <= SAMPLES; i++) {
+          const at = (length * i) / SAMPLES;
+          const pt = pathEl.getPointAtLength(at);
+          descent += Math.max(pt.y - prev.y, 0) + HORIZONTAL_WEIGHT * Math.abs(pt.x - prev.x);
+          arcAt[i] = at;
+          descentAt[i] = descent;
+          if (leadArc === 0 && pt.x >= W / 2) leadArc = at;
+          prev = pt;
+        }
+        totalDescent = descent || 1;
+        boxHeight = H;
+      }
+
+      function arcForDescent(target: number): number {
+        if (target <= 0) return 0;
+        if (target >= totalDescent) return length;
+        let lo = 1;
+        let hi = SAMPLES;
+        while (lo < hi) {
+          const mid = (lo + hi) >> 1;
+          if (descentAt[mid] < target) lo = mid + 1;
+          else hi = mid;
+        }
+        const span = descentAt[lo] - descentAt[lo - 1];
+        const t = span > 0 ? (target - descentAt[lo - 1]) / span : 0;
+        return arcAt[lo - 1] + (arcAt[lo] - arcAt[lo - 1]) * t;
+      }
+
+      function draw() {
+        if (!(length > 0) || boxHeight <= 0) return;
+        const rect = svgEl.getBoundingClientRect();
+        const tip = window.innerHeight * TIP - rect.top;
+        const span = boxHeight - startY;
+        const progress = span > 0 ? clamp((tip - startY) / span, 0, 1) : 0;
+        const drawn = Math.max(leadArc, arcForDescent(progress * totalDescent));
+        pathEl.style.strokeDashoffset = (length - drawn).toString();
+      }
+
+      let queued = false;
+      function schedule(rebuild: boolean) {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          if (rebuild) build();
+          draw();
+        });
+      }
+
+      build();
+      draw();
+
+      window.addEventListener("scroll", () => schedule(false), { passive: true });
+      window.addEventListener("load", () => schedule(true));
+      window.addEventListener("resize", () => schedule(true));
+      if ("ResizeObserver" in window) {
+        // Catches reflow the resize event misses: lazy images landing, fonts
+        // swapping in, anything that moves the blocks the line is pinned to.
+        new ResizeObserver(() => schedule(true)).observe(wrap);
+      }
+    }
+  </script>
+
+  <script>
+    // Tech strip. Two tracks are rendered server-side, which on a wide screen
+    // leaves the rail narrower than the viewport: the marks stop short of the
+    // edges and the restart is visible as a jump back to the start. So measure
+    // one track and clone it until the rail overflows the screen by a whole
+    // track. The animation then travels exactly one track width, which puts an
+    // identical frame at both ends of the loop -- Steam leaves on the left as
+    // the next Steam arrives on the right, and the restart is invisible.
+    {
+      const strip = document.querySelector<HTMLElement>(".techstrip");
+      const rail = strip?.querySelector<HTMLElement>(".tech-rail");
+      const first = rail?.querySelector<HTMLElement>(".tech-track");
+
+      if (strip && rail && first) {
+        const railEl = rail;
+        const firstTrack = first;
+        const SPEED = 26; // px per second; pace stays the same at any width
+        let lastWidth = -1;
+
+        const fit = () => {
+          const viewport = strip.clientWidth;
+          const track = firstTrack.getBoundingClientRect().width;
+          if (!track || !viewport) return;
+
+          // One track past the viewport, so a copy is always queued off-screen
+          // to the left and the rail never runs out of marks mid-travel.
+          const wanted = Math.max(2, Math.ceil(viewport / track) + 1);
+          const have = railEl.children.length;
+          for (let i = have; i < wanted; i++) {
+            const copy = firstTrack.cloneNode(true) as HTMLElement;
+            copy.setAttribute("aria-hidden", "true");
+            railEl.appendChild(copy);
+          }
+
+          railEl.style.setProperty("--tech-shift", `${track}px`);
+          railEl.style.setProperty("--tech-dur", `${track / SPEED}s`);
+          railEl.setAttribute("data-measured", "");
+        };
+
+        fit();
+        // The Varjo wordmark changes width when the display face swaps in, and
+        // that width is the loop distance, so re-measure once fonts settle.
+        document.fonts?.ready.then(fit);
+        window.addEventListener("resize", () => {
+          // Ignore the height-only resizes a mobile URL bar fires; re-fitting
+          // there would restart the loop for no reason.
+          if (window.innerWidth === lastWidth) return;
+          lastWidth = window.innerWidth;
+          fit();
+        });
+        lastWidth = window.innerWidth;
+      }
+    }
+  </script>
 </Layout>

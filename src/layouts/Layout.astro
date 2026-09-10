@@ -136,10 +136,6 @@ const currentPath = Astro.url.pathname;
         from { transform: translate(0, 0) scale(1); }
         to { transform: translate(20px, 30px) scale(1.08); }
       }
-      @media (prefers-reduced-motion: reduce) {
-        .glow { animation: none; }
-      }
-
       .site-header {
         max-width: 960px;
         margin: 0 auto;

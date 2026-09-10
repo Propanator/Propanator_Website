@@ -1,0 +1,212 @@
+---
+const cards = [
+  { src: "/images/card-neverboard.png", alt: "Never Board" },
+  { src: "/images/card-heli-sim.png", alt: "Geospatial helicopter simulator" },
+  { src: "/images/card-flamingo.png", alt: "State Street Global Advisors — DIA" },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Angled cards + section bridge test</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <a href="/projects" class="back-link">← Back to site</a>
+
+    <div class="page-wrap">
+      <!-- Hero section -->
+      <section class="hero">
+        <div class="hero-inner">
+          <h1>Every project, <span>built to ship.</span></h1>
+          <p>VR, simulation, and gameplay systems built for teams that need it done right.</p>
+          <a class="cta" href="#work">Find out more</a>
+        </div>
+      </section>
+
+      <!-- Diagonal band bleeding across the seam between hero and next section -->
+      <div class="bridge-band" aria-hidden="true"></div>
+
+      <!-- Squiggly line: draws itself as you scroll from the bottom of the hero
+           into the work section below -->
+      <svg class="squiggle" viewBox="0 0 200 500" preserveAspectRatio="none" aria-hidden="true">
+        <path
+          id="squigglePath"
+          d="M 100 0
+             C 40 60, 160 100, 100 160
+             C 40 220, 160 260, 100 320
+             C 40 380, 160 420, 100 480
+             L 100 500"
+          fill="none"
+          stroke="#ff5ca8"
+          stroke-width="4"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <!-- Next section with angled image cards -->
+      <section class="work" id="work">
+        <div class="cards">
+          {cards.map((c) => (
+            <div class="card">
+              <img src={c.src} alt={c.alt} loading="lazy" />
+            </div>
+          ))}
+        </div>
+        <div class="work-text">
+          <h2>World-class builds, for world-class studios</h2>
+          <p>This paragraph exists just to show how the angled cards sit next to a text
+            column, same layout idea as the reference site.</p>
+        </div>
+      </section>
+    </div>
+
+    <style is:global>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; background: #0e0e16; }
+      body { color: #f1f0f7; font-family: "Inter", sans-serif; }
+      h1, h2 { font-family: "Space Grotesk", sans-serif; font-weight: 600; margin: 0; }
+
+      .back-link {
+        position: fixed;
+        top: 24px;
+        left: 24px;
+        z-index: 30;
+        color: #cfcbe0;
+        text-decoration: none;
+        font-size: 0.85rem;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(0,0,0,0.4);
+      }
+
+      .page-wrap { position: relative; }
+
+      .hero {
+        position: relative;
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(120deg, #4a3fd9 0%, #7c5cff 55%, #a06bff 100%);
+        overflow: hidden;
+      }
+      .hero-inner { max-width: 560px; padding: 0 8vw; }
+      .hero h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); line-height: 1.1; margin-bottom: 18px; }
+      .hero h1 span { color: #ffd45c; }
+      .hero p { color: rgba(255,255,255,0.85); font-size: 1.05rem; margin-bottom: 28px; max-width: 420px; }
+      .cta {
+        display: inline-block;
+        padding: 13px 26px;
+        background: #14131c;
+        color: #fff;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.03em;
+        text-decoration: none;
+      }
+
+      /* The diagonal band: positioned to overlap the seam between .hero and .work,
+         so it reads as one continuous shape crossing both sections rather than
+         stopping at the hard section-color boundary. */
+      .bridge-band {
+        position: absolute;
+        top: 40vh;
+        right: 6%;
+        width: 14vw;
+        min-width: 140px;
+        height: 60vh;
+        background: linear-gradient(160deg, #ffd45c, #ffb020);
+        transform: skewX(-18deg);
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      /* Squiggle: positioned to start near the bottom of the hero and run down
+         into the work section, same seam-crossing idea as the band, but as a
+         hand-drawn-feeling line instead of a solid shape. Drawn via
+         stroke-dasharray/dashoffset, animated by JS-computed scroll progress. */
+      .squiggle {
+        position: absolute;
+        top: 50vh;
+        left: 6%;
+        width: 60px;
+        height: 55vh;
+        z-index: 6;
+        pointer-events: none;
+      }
+      #squigglePath {
+        stroke-dasharray: var(--squiggle-length, 1000);
+        stroke-dashoffset: var(--squiggle-length, 1000);
+      }
+
+      .work {
+        position: relative;
+        background: #0e0e16;
+        padding: 100px 8vw 120px;
+        display: flex;
+        gap: 6vw;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .cards {
+        display: flex;
+        gap: 0;
+      }
+      .card {
+        width: 160px;
+        height: 320px;
+        overflow: hidden;
+        clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+        margin-left: -20px;
+      }
+      .card:first-child { margin-left: 0; }
+      .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .work-text { max-width: 480px; }
+      .work-text h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 18px; }
+      .work-text p { color: #9a96ac; line-height: 1.6; }
+
+      @media (max-width: 780px) {
+        .hero { min-height: 60vh; }
+        .bridge-band { width: 24vw; right: 3%; }
+        .work { flex-direction: column; align-items: flex-start; padding: 80px 6vw; }
+        .cards { flex-wrap: wrap; }
+        .card { width: 110px; height: 220px; margin-left: -14px; }
+      }
+    </style>
+
+    <script>
+      const path = document.getElementById("squigglePath") as unknown as SVGPathElement | null;
+      const squiggleEl = document.querySelector<HTMLElement>(".squiggle");
+
+      if (path && squiggleEl) {
+        const length = path.getTotalLength();
+        squiggleEl.style.setProperty("--squiggle-length", length.toString());
+
+        function update() {
+          const rect = squiggleEl!.getBoundingClientRect();
+          // Starts drawing once the top of the squiggle enters the bottom of the
+          // viewport, finishes once its bottom reaches the top of the viewport.
+          const start = window.innerHeight;
+          const end = -rect.height;
+          const raw = (start - rect.top) / (start - end);
+          const progress = Math.min(Math.max(raw, 0), 1);
+          const offset = length * (1 - progress);
+          path!.style.strokeDashoffset = offset.toString();
+          requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+      }
+    </script>
+  </body>
+</html>
