@@ -1,4 +1,8 @@
 ---
+// Dev-only prototype: works as normal under `npm run dev`, but the production
+// build turns this route into a redirect home so placeholder copy never ships.
+if (!import.meta.env.DEV) return Astro.redirect("/");
+
 const cards = [
   { src: "/images/card-neverboard.png", alt: "Never Board" },
   { src: "/images/card-heli-sim.png", alt: "Geospatial helicopter simulator" },

@@ -1,5 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Portrait from "../components/Portrait.astro";
+import { getCollection } from "astro:content";
 import {
   siUnrealengine,
   siUnity,
@@ -16,18 +18,11 @@ import visualStudioSvg from "../icons/visual-studio.svg?raw";
 
 const siVisualstudio = { path: visualStudioSvg.match(/ d="([^"]+)"/)?.[1] ?? "" };
 
-const specialties = [
-  { label: "VR Development", detail: "Full-cycle VR builds for PCVR and standalone, from prototype to shipped brand activation." },
-  { label: "Simulation & Networking", detail: "Multiplayer and networked simulation systems, including geospatial (Cesium) integrations." },
-  { label: "AI-Assisted Pipelines", detail: "ComfyUI-based generation pipelines for character and environment content." },
-  { label: "Level & Systems Design", detail: "Gameplay systems and level design grounded in agile, team-based production." },
-];
-
-const cards = [
-  { src: "/images/card-neverboard.png", alt: "Never Board" },
-  { src: "/images/card-heli-sim.png", alt: "Geospatial helicopter simulator" },
-  { src: "/images/card-flamingo.png", alt: "State Street Global Advisors — DIA" },
-];
+// The card fan pulls from the same project files as the projects page —
+// see src/content/projects/. Only `featured: true` projects appear here.
+const cards = (await getCollection("projects", (p) => p.data.featured))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({ src: p.data.image, alt: p.data.title }));
 
 // Marks are inlined at build time, so the strip costs no extra requests.
 // Varjo's own logo is a wordmark, so it rides as text rather than a glyph.
@@ -49,8 +44,8 @@ const tech = [
   <!-- The line threads the whole page, so it lives outside .showcase and
        spans this wrapper: hero through demo reel. -->
   <div class="threaded" data-line="straight">
-    <!-- One single continuous path, threading hero -> work -> specialties ->
-         About -> demo reel. Its geometry is measured from the real positions of
+    <!-- One single continuous path, threading hero -> work -> About -> demo
+         reel. Its geometry is measured from the real positions of
          those blocks at runtime; a fixed viewBox stretched over the page put
          the line through the hero copy on wide screens, because its coordinates
          had no relationship to where anything actually sits. -->
@@ -58,7 +53,6 @@ const tech = [
       <path
         id="squigglePath"
         fill="none"
-        stroke="#ff5ca8"
         stroke-width="5"
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -103,15 +97,7 @@ const tech = [
               <a class="about-link" href="/contact">Get in touch →</a>
             </div>
           </div>
-          <figure class="about-photo">
-            <img
-              src="/images/about-louis.jpg"
-              alt="Louis-Charles La Manna"
-              width="900"
-              height="1546"
-              loading="lazy"
-            />
-          </figure>
+          <Portrait class="about-photo" maxHeight="620px" mobileMaxHeight="440px" />
         </div>
       </section>
 
@@ -157,20 +143,6 @@ const tech = [
         </div>
       </section>
 
-      <!-- Continues from the wave: down the right edge, along the bottom of
-           specialties, then down further and around the About section too. -->
-      <div class="frame-zone">
-        <section class="specialties">
-          <div class="specialties-inner">
-            {specialties.map((s) => (
-              <div class="specialty">
-                <h3>{s.label}</h3>
-                <p>{s.detail}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      </div>
     </div>
 
     <section class="reel">
@@ -180,14 +152,6 @@ const tech = [
           <iframe
             src="https://www.youtube.com/embed/MtKvIDYAfFk?wmode=transparent&rel=0"
             title="Propane Games demo reel"
-            loading="lazy"
-            allowfullscreen
-          ></iframe>
-        </div>
-        <div class="video-wrap">
-          <iframe
-            src="https://www.youtube.com/embed/oyMxiVD2zH8?wmode=transparent&rel=0"
-            title="Level design walkthrough"
             loading="lazy"
             allowfullscreen
           ></iframe>
@@ -220,7 +184,7 @@ const tech = [
       min-height: 78vh;
       display: flex;
       align-items: center;
-      background-color: #0e0e16;
+      background-color: var(--bg);
       background-image: url("/images/hero-vr-headset.jpg");
       background-size: cover;
       /* The headset sits centre-frame; biasing right keeps it clear of the
@@ -236,8 +200,7 @@ const tech = [
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(90deg, rgba(12,11,22,0.94) 0%, rgba(12,11,22,0.82) 38%, rgba(12,11,22,0.30) 70%, rgba(12,11,22,0.15) 100%),
-        linear-gradient(120deg, rgba(74,63,217,0.55) 0%, rgba(124,92,255,0.28) 55%, rgba(160,107,255,0.10) 100%);
+        linear-gradient(90deg, rgba(12,11,22,0.94) 0%, rgba(12,11,22,0.82) 38%, rgba(12,11,22,0.45) 70%, rgba(12,11,22,0.30) 100%);
       pointer-events: none;
     }
 
@@ -248,14 +211,14 @@ const tech = [
       padding: 0 6vw;
     }
     .hero-inner h1 {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: var(--font-display);
       font-weight: 700;
       line-height: 1.08;
       font-size: clamp(2.4rem, 5vw, 4rem);
-      color: #f1f0f7;
+      color: var(--text);
       margin: 0 0 20px;
     }
-    .hero-inner h1 span { color: #ffd45c; }
+    .hero-inner h1 span { color: var(--gold); }
     .hero-sub {
       color: rgba(255,255,255,0.85);
       font-size: clamp(1rem, 1.1vw, 1.15rem);
@@ -271,7 +234,7 @@ const tech = [
       top: -46px;
       width: 22px;
       height: 90px;
-      border-left: 3px solid #ff5ca8;
+      border-left: 3px solid var(--magenta);
       border-radius: 60% 40% 60% 40% / 50% 60% 40% 50%;
       opacity: 0.85;
       pointer-events: none;
@@ -279,9 +242,9 @@ const tech = [
     .cta {
       display: inline-block;
       padding: 15px 30px;
-      background: #14131c;
-      color: #fff;
-      font-family: "Space Grotesk", sans-serif;
+      background: var(--panel);
+      color: var(--text);
+      font-family: var(--font-display);
       font-weight: 600;
       font-size: 0.9rem;
       letter-spacing: 0.02em;
@@ -291,18 +254,23 @@ const tech = [
     }
     .cta:hover { transform: translateY(-2px); }
 
-    /* Diagonal band bleeding across the hero/work seam */
+    /* Diagonal band bleeding across the hero/work seam. Visible from the
+       start at a shorter length, then grows down toward its full height as
+       the page scrolls a little — driven by --bridge-grow, set in the
+       scroll listener below. transform-origin keeps the top edge anchored
+       so it extends downward rather than scaling from the center. */
     .bridge-band {
       position: absolute;
-      top: 55vh;
+      top: clamp(280px, calc(78vh - 220px), 900px);
       right: 8%;
-      width: 12vw;
-      min-width: 130px;
-      height: 42vh;
-      background: linear-gradient(160deg, #ffd45c, #ffb020);
-      transform: skewX(-18deg);
+      width: clamp(90px, 8vw, 170px);
+      height: 420px;
+      background: linear-gradient(160deg, var(--gold), var(--gold-deep));
+      transform: skewX(-26deg) scaleY(var(--bridge-grow, 0.75));
+      transform-origin: top;
       z-index: 5;
       pointer-events: none;
+      will-change: transform;
     }
 
     /* Gentle wave squiggle drawn across the seam between hero and work */
@@ -318,6 +286,7 @@ const tech = [
       z-index: 7;
       pointer-events: none;
     }
+    .squiggle-line path { stroke: var(--plum); }
 
     /* Sits above .bridge-band so the yellow diagonal runs out of the hero and
        disappears behind the portrait rather than crossing over it. */
@@ -334,15 +303,6 @@ const tech = [
       gap: 6vw;
       align-items: center;
     }
-    .about-copy .eyebrow {
-      font-family: var(--font-display);
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--magenta);
-      margin-bottom: 14px;
-    }
     .about-copy h2 {
       font-size: clamp(1.7rem, 3vw, 2.4rem);
       margin-bottom: 22px;
@@ -352,30 +312,6 @@ const tech = [
     .about-actions { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 28px; }
     .about-link { color: var(--magenta); font-weight: 600; font-size: 0.92rem; }
     .about-link:hover { text-decoration: underline; }
-
-    .about-photo { margin: 0; position: relative; }
-    /* Violet wash behind the portrait, offset down-left, tying it to the hero. */
-    .about-photo::before {
-      content: "";
-      position: absolute;
-      inset: 24px -18px -22px 22px;
-      border-radius: var(--radius);
-      background: linear-gradient(150deg, var(--violet), var(--magenta));
-      opacity: 0.28;
-      filter: blur(2px);
-    }
-    .about-photo img {
-      position: relative;
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: 620px;
-      object-fit: cover;
-      object-position: 50% 22%;
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
-    }
 
     /* Tech strip: one continuous rail of marks, full page width. */
     .techstrip {
@@ -387,9 +323,12 @@ const tech = [
       background: rgba(22, 21, 31, 0.6);
       overflow: hidden;
       /* Fades the marks out at both edges so items enter and leave the rail
-         instead of popping at a hard boundary. */
-      -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
-      mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+         instead of popping at a hard boundary. Tune the stops here only —
+         both mask declarations below read the same gradient, so Chrome and
+         Firefox can't drift apart again. */
+      --strip-fade: linear-gradient(90deg, transparent 3%, #000 5%, #000 91%, transparent);
+      -webkit-mask-image: var(--strip-fade);
+      mask-image: var(--strip-fade);
     }
     .tech-rail {
       display: flex;
@@ -420,7 +359,7 @@ const tech = [
       opacity: 0.5;
       transition: opacity 0.2s ease, color 0.2s ease;
     }
-    .tech-item:hover { opacity: 1; color: #fff; }
+    .tech-item:hover { opacity: 1; color: var(--text); }
     .tech-item svg { height: 34px; width: auto; fill: currentColor; }
     .tech-word {
       font-family: var(--font-display);
@@ -442,7 +381,7 @@ const tech = [
     }
     .work {
       position: relative;
-      background: #0e0e16;
+      background: var(--bg);
       padding: 110px 8vw 130px;
       display: flex;
       gap: 6vw;
@@ -463,41 +402,23 @@ const tech = [
       transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
     .card:first-child { margin-left: 0; }
-    .card:hover { transform: translateY(-8px); box-shadow: 0 26px 50px rgba(124,92,255,0.35); }
+    .card:hover { transform: translateY(-8px); box-shadow: 0 26px 50px var(--violet-soft); }
     .card img { width: 100%; height: 100%; object-fit: cover; }
 
     .work-text { max-width: 460px; position: relative; z-index: 1; }
-    .work-text h2 { font-family: "Space Grotesk", sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 18px; color: #f1f0f7; }
-    .work-text p { color: #9a96ac; line-height: 1.6; margin-bottom: 20px; }
-    .work-link { color: #ff5ca8; font-weight: 600; text-decoration: none; font-size: 0.92rem; }
+    .work-text h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 18px; }
+    .work-text p { color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+    .work-link { color: var(--magenta); font-weight: 600; font-size: 0.92rem; }
     .work-link:hover { text-decoration: underline; }
 
-    /* Restyled specialties/bio/reel below, matching site's normal design tokens */
-    .frame-zone { position: relative; }
+    /* padding-bottom, not margin — .reel is the last element inside the
+       squiggle-line's SVG layer, so a trailing margin here collapses through
+       and never actually extends the layer's own height, leaving the line's
+       "below the reel" run with no real room. Padding always counts. */
+    .reel { margin: 40px 0 0; padding-bottom: 200px; }
+    .reel h2 { font-size: 1.6rem; margin-bottom: 28px; }
 
-    .specialties { padding: 70px 8vw 100px; position: relative; z-index: 1; }
-    .specialties-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-    .specialty {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 24px;
-      transition: border-color 0.2s ease, transform 0.2s ease;
-    }
-    .specialty:hover { border-color: var(--violet-soft); transform: translateY(-2px); }
-    .specialty h3 { font-size: 1rem; color: var(--text); margin-bottom: 8px; }
-    .specialty p { color: var(--muted); font-size: 0.9rem; }
-
-    .reel { margin-bottom: 120px; }
-    .reel h2 { font-size: 1.3rem; margin-bottom: 20px; }
-
-    .reel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .reel-grid { display: grid; grid-template-columns: 1fr; max-width: 900px; margin: 0 auto; }
     .video-wrap {
       position: relative;
       padding-top: 56.25%;
@@ -505,6 +426,7 @@ const tech = [
       border: 1px solid var(--line);
       border-radius: var(--radius);
       overflow: hidden;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
     }
     .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
@@ -513,55 +435,67 @@ const tech = [
       /* The copy runs full width here, so the scrim has to cover the photo evenly. */
       .hero-scrim {
         background:
-          linear-gradient(90deg, rgba(12,11,22,0.94) 0%, rgba(12,11,22,0.86) 60%, rgba(12,11,22,0.70) 100%),
-          linear-gradient(120deg, rgba(74,63,217,0.50) 0%, rgba(160,107,255,0.18) 100%);
+          linear-gradient(90deg, rgba(12,11,22,0.94) 0%, rgba(12,11,22,0.86) 60%, rgba(12,11,22,0.70) 100%);
       }
       .hero-inner { max-width: 100%; padding: 0 7vw; }
-      .bridge-band { width: 22vw; right: 3%; }
+      .bridge-band { top: calc(60vh - 90px); height: 200px; width: clamp(60px, 16vw, 110px); right: 4%; }
       .work { flex-direction: column; align-items: flex-start; padding: 90px 6vw; }
       .card { width: 130px; height: 240px; margin-left: -22px; }
       .about { padding: 80px 6vw 70px; }
       .about-inner { grid-template-columns: 1fr; gap: 40px; }
-      /* The portrait is full width when stacked, so it gets cropped shorter
-         rather than running the length of the screen. */
-      .about-photo { max-width: 420px; }
-      .about-photo img { max-height: 440px; }
+      /* The portrait is full width when stacked, so cap it. (Its shorter
+         mobile crop comes from the mobileMaxHeight prop on <Portrait />.)
+         :global because the figure carries the component's scope, not ours. */
+      .about-inner > :global(.about-photo) { max-width: 420px; }
       .tech-track { gap: 46px; padding-right: 46px; }
       .tech-item svg { height: 28px; }
       .tech-word { font-size: 1rem; }
     }
     @media (max-width: 640px) {
-      .specialties-inner { grid-template-columns: 1fr; }
       .reel-grid { grid-template-columns: 1fr; }
     }
 
     /* Below this width the reel would otherwise run to the page edge, leaving
-       the line no lane to travel down beside it. */
+       the line no lane to travel down beside it. padding-inline only — the
+       shorthand would zero the padding-bottom the line relies on above. */
     @media (max-width: 1120px) {
-      .reel { padding: 0 46px; }
+      .reel { padding-inline: 46px; }
     }
     @media (max-width: 560px) {
-      .reel { padding: 0 30px; }
+      .reel { padding-inline: 30px; }
     }
   </style>
 
   <script>
+    // Grows the gold band from a shorter starting length to full height as
+    // the page scrolls down a little, rather than a one-shot entrance.
+    const bridgeBand = document.querySelector<HTMLElement>(".bridge-band");
+    if (bridgeBand) {
+      const BRIDGE_GROW_START = 0.75;
+      const BRIDGE_SCROLL_RANGE = 220;
+      const updateBridgeGrow = () => {
+        const progress = Math.min(Math.max(window.scrollY / BRIDGE_SCROLL_RANGE, 0), 1);
+        const grow = BRIDGE_GROW_START + (1 - BRIDGE_GROW_START) * progress;
+        bridgeBand.style.setProperty("--bridge-grow", grow.toFixed(3));
+      };
+      window.addEventListener("scroll", updateBridgeGrow, { passive: true });
+      updateBridgeGrow();
+    }
+
     const line = document.getElementById("squigglePath") as unknown as SVGPathElement | null;
     const svg = line?.closest("svg") as SVGSVGElement | null;
     const threaded = document.querySelector<HTMLElement>(".threaded");
     const hero = document.querySelector<HTMLElement>(".hero");
     const work = document.querySelector<HTMLElement>(".work");
-    const specialties = document.querySelector<HTMLElement>(".specialties-inner");
     const about = document.querySelector<HTMLElement>(".about-inner");
     const tech = document.querySelector<HTMLElement>(".techstrip");
     const reel = document.querySelector<HTMLElement>(".reel");
 
-    if (line && svg && threaded && hero && work && specialties && about && tech && reel) {
+    if (line && svg && threaded && hero && work && about && tech && reel) {
       const svgEl = svg;
       const wrap = threaded;
       const heroEl = hero;
       const workEl = work;
-      const specEl = specialties;
       const aboutEl = about;
       const techEl = tech;
       const reelEl = reel;
@@ -694,8 +628,7 @@ const tech = [
 
         const seam = bottom(heroEl);                              // hero photo edge
         const gapAbout = between(bottom(aboutEl), top(techEl));   // under About, over the tech strip
-        const gapWork = between(bottom(workEl), top(specEl));     // under "world-class", over the boxes
-        const gapSpec = between(bottom(specEl), top(reelEl));     // under the boxes, over the demo reel
+        const gapWork = between(bottom(workEl), top(reelEl));     // under "world-class", over the demo reel
         const belowReel = between(bottom(reelEl), H);             // under the demo reel
 
         spine.setAttribute(
@@ -708,11 +641,9 @@ const tech = [
               { x: xL, y: gapAbout },
               { x: xL, y: gapWork },
               { x: xR, y: gapWork },
-              { x: xR, y: gapSpec },
-              { x: xL, y: gapSpec },
-              { x: xL, y: belowReel }, // down the side of the demo reel
-              { x: xR, y: belowReel },
-              { x: xR, y: H + overshoot }, // and runs off the bottom of the page
+              { x: xR, y: belowReel }, // down the side of the demo reel
+              { x: xL, y: belowReel },
+              { x: xL, y: H + overshoot }, // and runs off the bottom of the page
             ],
             radiusFor(W),
           ),

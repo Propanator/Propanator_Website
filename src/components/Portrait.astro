@@ -1,0 +1,44 @@
+---
+// The portrait photo with its violet/magenta wash, shared by the homepage
+// About section and the contact page. Heights are props because the two
+// pages crop it differently; layout (width, order, margins) stays with the
+// page via the `class` passthrough.
+interface Props {
+  class?: string;
+  maxHeight?: string;
+  mobileMaxHeight?: string;
+  loading?: "eager" | "lazy";
+}
+const { class: className, maxHeight = "620px", mobileMaxHeight = "440px", loading = "lazy" } = Astro.props;
+---
+<figure class:list={["portrait", className]} style={`--portrait-max-h: ${maxHeight}; --portrait-max-h-mobile: ${mobileMaxHeight}`}>
+  <img src="/images/about-louis.jpg" alt="Louis-Charles La Manna" width="900" height="1546" loading={loading} />
+</figure>
+
+<style>
+  .portrait { margin: 0; position: relative; }
+  .portrait::before {
+    content: "";
+    position: absolute;
+    inset: 24px -18px -22px 22px;
+    border-radius: var(--radius);
+    background: linear-gradient(150deg, var(--violet), var(--magenta));
+    opacity: 0.28;
+    filter: blur(2px);
+  }
+  .portrait img {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: var(--portrait-max-h);
+    object-fit: cover;
+    object-position: 50% 22%;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  }
+  @media (max-width: 780px) {
+    .portrait img { max-height: var(--portrait-max-h-mobile); }
+  }
+</style>

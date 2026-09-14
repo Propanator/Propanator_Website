@@ -1,58 +1,24 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
 
-const projects = [
-  {
-    id: "pcvr",
-    title: "PCVR Brand Activation",
-    tags: ["VR"],
-    accent: "violet",
-    image: "",
-    summary: "PCVR experience built for a live brand activation event.",
-    details: "PCVR experience built for a live brand activation event. Designed to run reliably in front of a walk-up public audience over multiple days, with a tight setup/reset loop between sessions.",
-    role: "Lead UE5 developer — build, optimization, on-site deployment.",
-    stack: "Unreal Engine 5, C++, VR interaction systems",
-  },
-  {
-    id: "healthcare",
-    title: "Healthcare Training Simulation",
-    tags: ["VR", "Simulation"],
-    accent: "teal",
-    image: "",
-    summary: "VR training simulation for healthcare procedure practice.",
-    details: "A VR training simulation for healthcare procedure practice, built around repeatable, measurable training scenarios rather than a one-off demo experience.",
-    role: "Systems and interaction programming for procedural training flows.",
-    stack: "Unreal Engine 5, C++, VR",
-  },
-  {
-    id: "heli",
-    title: "Geospatial Helicopter Simulator",
-    tags: ["Simulation"],
-    accent: "magenta",
-    image: "",
-    summary: "Geospatial flight simulation built on real-world terrain data.",
-    details: "A geospatial flight simulation built on real-world terrain data, integrating Cesium's geospatial platform with the I-nstein simulation framework for accurate terrain and flight behavior.",
-    role: "Integrated Cesium geospatial data with the I-nstein simulation platform.",
-    stack: "Unreal Engine 5, C++, Cesium, networking",
-  },
-  {
-    id: "heritage",
-    title: "Heritage Site Experience",
-    tags: ["VR"],
-    accent: "violet",
-    image: "",
-    summary: "Interactive experience recreating a heritage site for public exhibition.",
-    details: "An interactive VR experience recreating a heritage site for public exhibition, built end to end from environment art integration to visitor-facing interaction design.",
-    role: "Environment and interaction build, end to end.",
-    stack: "Unreal Engine 5, C++",
-  },
-];
+// Each project lives as a Markdown file in src/content/projects/ — add or
+// edit projects by adding/editing files there, no need to touch this page.
+// See src/content.config.ts for the field schema.
+const entries = await getCollection("projects");
+const projects = entries
+  // Markdown body (anything written below the frontmatter) is auto-compiled
+  // to HTML by the glob loader — no render() dance needed to pass it to the
+  // client-side modal script as a plain string.
+  .map((e) => ({ id: e.id, ...e.data, docsHtml: e.rendered?.html ?? "" }))
+  .sort((a, b) => a.order - b.order);
 
 const allTags = ["All", ...new Set(projects.flatMap((p) => p.tags))];
 ---
 <Layout title="Projects" description="VR, simulation, and game development projects by Louis-Charles La Manna.">
-  <section class="intro">
-    <h1>Projects</h1>
+  <section class="page-intro">
+    <p class="eyebrow">Selected work</p>
+    <h1>Projects built to <span>ship.</span></h1>
     <p>A selection of shipped VR and simulation work — from live brand activations to
       training and geospatial tools.</p>
   </section>
@@ -65,35 +31,44 @@ const allTags = ["All", ...new Set(projects.flatMap((p) => p.tags))];
     ))}
   </div>
 
-  <section class="project-grid">
-    {projects.map((p) => (
-      <article
-        class="project"
-        data-tags={p.tags.join(",")}
-        data-project-id={p.id}
-        tabindex="0"
-        role="button"
-        aria-label={`View details for ${p.title}`}
-      >
-        <div class="project-thumb" data-accent={p.accent}>
-          {p.image ? <img src={p.image} alt={p.title} /> : <span class="thumb-placeholder">Add image</span>}
-        </div>
-        <div class="project-body">
-          <div class="tags">
-            {p.tags.map((t) => <span class="tag">{t}</span>)}
+  <div class="timeline-bleed">
+  <section class="project-list">
+    {projects.map((p, i) => (
+      <div class="timeline-row" data-side={i % 2 === 0 ? "left" : "right"}>
+        <span class="timeline-dot" aria-hidden="true"></span>
+        <article
+          class="project"
+          data-tags={p.tags.join(",")}
+          data-project-id={p.id}
+          tabindex="0"
+          role="button"
+          aria-label={`View details for ${p.title}`}
+        >
+          <div class="project-thumb">
+            <span class="project-index">{String(i + 1).padStart(2, "0")}</span>
+            <img src={p.image} alt={p.title} />
           </div>
-          <h2>{p.title}</h2>
-          <p class="summary">{p.summary}</p>
-        </div>
-      </article>
+          <div class="project-body">
+            <div class="tags">
+              {p.tags.map((t) => <span class="tag">{t}</span>)}
+            </div>
+            <h2>{p.title}</h2>
+            <p class="period">{p.period}</p>
+            <p class="summary">{p.summary}</p>
+            <span class="view-more">View details →</span>
+          </div>
+        </article>
+      </div>
     ))}
   </section>
+  </div>
 
   <!-- Detail overlay -->
   <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
       <div class="modal-image" id="modalImage"></div>
+      <div class="modal-video" id="modalVideo"></div>
       <div class="modal-body">
         <div class="tags" id="modalTags"></div>
         <h2 id="modalTitle"></h2>
@@ -102,15 +77,13 @@ const allTags = ["All", ...new Set(projects.flatMap((p) => p.tags))];
           <div><dt>Role</dt><dd id="modalRole"></dd></div>
           <div><dt>Stack</dt><dd id="modalStack"></dd></div>
         </dl>
+        <div class="modal-links" id="modalLinks"></div>
+        <div class="modal-docs" id="modalDocs"></div>
       </div>
     </div>
   </div>
 
   <style>
-    .intro { padding: 64px 0 32px; max-width: 560px; }
-    .intro h1 { font-size: clamp(1.9rem, 3.6vw, 2.4rem); margin-bottom: 14px; }
-    .intro p { color: var(--muted); }
-
     .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 36px; }
     .filter-btn {
       font-family: var(--font-body);
@@ -131,47 +104,133 @@ const allTags = ["All", ...new Set(projects.flatMap((p) => p.tags))];
       border-color: transparent;
     }
 
-    .project-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
+    /* Timeline: a spine runs down the center, each row parks its project on
+       alternating sides with a dot marking it on the spine, and the card
+       slides in from its outer edge toward the line as it scrolls into view. */
+    .project-list {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 34px;
       margin-bottom: 70px;
+      padding: 10px 0;
     }
+    /* Breaks the timeline out of Layout's 960px <main> on desktop, same
+       technique as the homepage's full-bleed sections — cards get real
+       width to breathe into instead of wrapping to a tall stack of lines. */
+    @media (min-width: 721px) {
+      .timeline-bleed {
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+      }
+      .project-list {
+        max-width: 1300px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      .project { width: 48%; }
+    }
+    .project-list::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 3px;
+      margin-left: -1.5px;
+      background: linear-gradient(180deg, var(--violet), var(--magenta));
+      border-radius: 999px;
+      box-shadow: 0 0 24px rgba(124, 92, 255, 0.45);
+      z-index: 0;
+    }
+
+    .timeline-row {
+      position: relative;
+      display: flex;
+    }
+    .timeline-row[data-side="left"] { justify-content: flex-start; }
+    .timeline-row[data-side="right"] { justify-content: flex-end; }
+
+    .timeline-dot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 2;
+      width: 14px;
+      height: 14px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--violet), var(--magenta));
+      box-shadow: 0 0 0 5px var(--bg), 0 0 18px rgba(255, 92, 168, 0.6);
+    }
+
     .project {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      width: 46%;
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       overflow: hidden;
       cursor: pointer;
-      transition: border-color 0.2s ease, transform 0.2s ease;
+      opacity: 0;
+      transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.7s ease;
+    }
+    /* Resting transform is the entrance target — cards start pushed further
+       toward their outer page edge and slide in to this position. */
+    .timeline-row[data-side="right"] .project { flex-direction: row-reverse; }
+    .timeline-row[data-side="left"] .project:not(.in-view) { transform: translateX(-70px); }
+    .timeline-row[data-side="right"] .project:not(.in-view) { transform: translateX(70px); }
+    .project.in-view {
+      opacity: 1;
+      transform: translateX(0);
+      transition: border-color 0.2s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, opacity 0.7s ease;
     }
     .project:hover, .project:focus-visible {
       border-color: var(--violet-soft);
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      box-shadow: 0 20px 50px rgba(124, 92, 255, 0.18);
       outline: none;
     }
 
     .project-thumb {
-      aspect-ratio: 16 / 9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      flex: 0 0 44%;
       position: relative;
+      min-height: 220px;
     }
-    .project-thumb[data-accent="violet"] { background: linear-gradient(135deg, #7c5cff, #3a2b8c); }
-    .project-thumb[data-accent="teal"] { background: linear-gradient(135deg, #22d3b8, #146b5c); }
-    .project-thumb[data-accent="magenta"] { background: linear-gradient(135deg, #ff5ca8, #7a2652); }
-    .project-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .thumb-placeholder {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.7);
-      border: 1px dashed rgba(255,255,255,0.4);
-      padding: 6px 12px;
+    .project-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .project-index {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 1;
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      background: rgba(14, 14, 22, 0.6);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 999px;
+      padding: 5px 12px;
     }
+    .timeline-row[data-side="right"] .project-index { left: auto; right: 16px; }
 
-    .project-body { padding: 20px; }
-    .tags { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .project-body {
+      flex: 1;
+      padding: 34px 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .tags { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
     .tag {
       font-size: 0.72rem;
       font-weight: 500;
@@ -180,8 +239,15 @@ const allTags = ["All", ...new Set(projects.flatMap((p) => p.tags))];
       border-radius: 999px;
       padding: 4px 12px;
     }
-    .project h2 { font-size: 1.05rem; margin-bottom: 8px; }
-    .summary { color: var(--muted); font-size: 0.9rem; }
+    .project h2 { font-size: 1.3rem; margin-bottom: 6px; }
+    .period { color: var(--muted); font-size: 0.8rem; margin-bottom: 12px; }
+    .summary { color: var(--text); font-size: 0.95rem; line-height: 1.55; margin-bottom: 16px; }
+    .view-more {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      color: var(--violet);
+      font-weight: 600;
+    }
 
     /* Modal */
     .modal-overlay {
@@ -237,6 +303,18 @@ const allTags = ["All", ...new Set(projects.flatMap((p) => p.tags))];
       background-position: center;
       border-radius: 20px 20px 0 0;
     }
+    /* Video takes over the same slot as the static image when a project has
+       one — see the script toggling image vs. video display on open. */
+    .modal-video {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 20px 20px 0 0;
+      overflow: hidden;
+      background: #000;
+    }
+    .modal-video:empty { display: none; }
+    .modal-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
     .modal-body { padding: 28px; }
     .modal-body h2 { font-size: 1.4rem; margin-bottom: 14px; }
@@ -245,8 +323,58 @@ const allTags = ["All", ...new Set(projects.flatMap((p) => p.tags))];
     .modal-body dt { font-family: var(--font-display); font-size: 0.78rem; color: var(--muted); margin-bottom: 4px; }
     .modal-body dd { margin: 0; font-size: 0.9rem; }
 
-    @media (max-width: 640px) {
-      .project-grid { grid-template-columns: 1fr; }
+    .modal-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .modal-links:empty { display: none; }
+    .modal-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--violet);
+      background: var(--violet-soft);
+      border-radius: 999px;
+      padding: 8px 16px;
+      transition: background 0.15s ease;
+    }
+    .modal-links a:hover { background: rgba(124, 92, 255, 0.5); }
+
+    /* Optional per-project write-up — the Markdown body of its .md file,
+       compiled to HTML at build time. Only present (and only takes up
+       space) when a project actually has body content below its frontmatter. */
+    .modal-docs {
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      color: var(--text);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+    .modal-docs:empty { display: none; }
+    .modal-docs :global(h2) { font-size: 1.05rem; margin: 0 0 10px; }
+    .modal-docs :global(h2:not(:first-child)) { margin-top: 20px; }
+    .modal-docs :global(p) { margin: 0 0 14px; color: var(--text); }
+    .modal-docs :global(ul) { margin: 0 0 14px; padding-left: 20px; list-style: disc; }
+    .modal-docs :global(li) { margin-bottom: 6px; }
+    .modal-docs :global(code) {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 0.85em;
+    }
+    .modal-docs :global(a) { color: var(--violet); text-decoration: underline; }
+
+    @media (max-width: 720px) {
+      .project-list::before, .timeline-dot { display: none; }
+      .timeline-row[data-side="left"], .timeline-row[data-side="right"] { justify-content: flex-start; }
+      .project, .timeline-row[data-side="right"] .project { flex-direction: column; width: 100%; }
+      .timeline-row[data-side="left"] .project:not(.in-view),
+      .timeline-row[data-side="right"] .project:not(.in-view) { transform: translateY(24px); }
+      .project.in-view { transform: translateY(0); }
+      .project-thumb { min-height: 200px; }
+      .project-body { padding: 26px; }
       .modal-body dl { grid-template-columns: 1fr; }
     }
   </style>
@@ -263,21 +391,43 @@ const allTags = ["All", ...new Set(projects.flatMap((p) => p.tags))];
         cards.forEach((c) => {
           const tags = c.dataset.tags?.split(",") ?? [];
           const show = tag === "All" || tags.includes(tag ?? "");
-          (c as HTMLElement).style.display = show ? "" : "none";
+          // Hide the whole timeline row, not just the card, so a filtered-out
+          // project doesn't leave an orphaned dot sitting on the spine.
+          const row = c.closest<HTMLElement>(".timeline-row");
+          if (row) row.style.display = show ? "" : "none";
         });
       });
     });
+
+    // Each project starts pushed out toward its page edge (see the
+    // translateX rest state in CSS) and slides in to the timeline the first
+    // time it scrolls into view.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.2, rootMargin: "0px 0px -60px 0px" }
+    );
+    cards.forEach((c) => observer.observe(c));
   </script>
 
   <script define:vars={{ projects }}>
     const cards = document.querySelectorAll(".project");
     const overlay = document.getElementById("modalOverlay");
     const modalImage = document.getElementById("modalImage");
+    const modalVideo = document.getElementById("modalVideo");
     const modalTitle = document.getElementById("modalTitle");
     const modalDetails = document.getElementById("modalDetails");
     const modalTags = document.getElementById("modalTags");
     const modalRole = document.getElementById("modalRole");
     const modalStack = document.getElementById("modalStack");
+    const modalLinks = document.getElementById("modalLinks");
+    const modalDocs = document.getElementById("modalDocs");
     const closeBtn = document.getElementById("modalClose");
 
     function openModal(project) {
@@ -292,12 +442,31 @@ const allTags = ["All", ...new Set(projects.flatMap((p) => p.tags))];
         span.textContent = t;
         modalTags.appendChild(span);
       });
-      if (project.image) {
-        modalImage.style.backgroundImage = `url(${project.image})`;
-        modalImage.style.display = "";
-      } else {
+
+      // A video replaces the static image in the same slot when present.
+      if (project.video) {
+        modalVideo.innerHTML = `<iframe src="${project.video}" title="${project.title}" loading="lazy" allowfullscreen></iframe>`;
         modalImage.style.display = "none";
+      } else {
+        modalVideo.innerHTML = "";
+        modalImage.style.backgroundImage = project.image ? `url(${project.image})` : "";
+        modalImage.style.display = project.image ? "" : "none";
       }
+
+      modalLinks.innerHTML = "";
+      (project.links ?? []).forEach((link) => {
+        const a = document.createElement("a");
+        a.href = link.href;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.textContent = `${link.label} →`;
+        modalLinks.appendChild(a);
+      });
+
+      // Markdown body, pre-compiled to HTML at build time — trusted content
+      // since it's authored in the repo, not user input.
+      modalDocs.innerHTML = project.docsHtml || "";
+
       overlay.classList.add("open");
       overlay.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";

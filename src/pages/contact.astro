@@ -1,58 +1,204 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Portrait from "../components/Portrait.astro";
+import { getCollection } from "astro:content";
+import { contactChannels as channels } from "../data/site";
+
+const featured = (await getCollection("projects", (p) => p.data.featured))
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 <Layout title="Contact">
   <section class="intro">
-    <h1>Contact</h1>
-    <p>Available for new freelance contract work in VR, simulation, and UE5 development.</p>
+    <div class="intro-copy">
+      <p class="eyebrow">Get in touch</p>
+      <h1>Let's build something worth <span>shipping.</span></h1>
+      <p class="lede">
+        Available for new freelance contract work in VR, simulation, and UE5 development.
+        Reach out through whichever channel works best for you.
+      </p>
+      <span class="badge"><span class="dot"></span> Currently taking on new work</span>
+      <div class="project-row" aria-hidden="true">
+        {featured.map((p, i) => (
+          <div class="project-bubble" style={`--i: ${i}`}>
+            <img src={p.data.image} alt="" loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </div>
+    <Portrait class="intro-photo" maxHeight="400px" mobileMaxHeight="320px" loading="eager" />
   </section>
 
   <section class="channels">
-    <a class="channel" href="mailto:louischarles.lamanna@icloud.com">
-      <span class="label">Email</span>
-      <span class="value">louischarles.lamanna@icloud.com</span>
-    </a>
-    <a class="channel" href="https://www.upwork.com/freelancers/~01d363ad82ef101190" target="_blank" rel="noopener">
-      <span class="label">Upwork</span>
-      <span class="value">View profile</span>
-    </a>
-    <a class="channel" href="https://www.linkedin.com/in/louis-charles-la-manna-harvey-244191164/" target="_blank" rel="noopener">
-      <span class="label">LinkedIn</span>
-      <span class="value">Connect</span>
-    </a>
+    {channels.map((c) => (
+      <a
+        class="channel"
+        href={c.href}
+        target={c.external ? "_blank" : undefined}
+        rel={c.external ? "noopener" : undefined}
+      >
+        <span class="icon" aria-hidden="true">
+          {c.icon === "mail" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2.5" />
+              <path d="M4 7.2l8 5.8 8-5.8" />
+            </svg>
+          )}
+          {c.icon === "briefcase" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="7.5" width="18" height="12" rx="2.5" />
+              <path d="M8.5 7.5V5.8a2 2 0 012-2h3a2 2 0 012 2V7.5" />
+              <path d="M3 13h18" />
+            </svg>
+          )}
+          {c.icon === "link" && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.5 14.5l5-5" />
+              <path d="M12.5 6l1.4-1.4a3.4 3.4 0 014.9 4.9L17.4 11" />
+              <path d="M11.5 18l-1.4 1.4a3.4 3.4 0 01-4.9-4.9L6.6 13" />
+            </svg>
+          )}
+        </span>
+        <span class="channel-text">
+          <span class="label">{c.label}</span>
+          <span class="value">{c.value}</span>
+        </span>
+        <span class="go" aria-hidden="true">→</span>
+      </a>
+    ))}
   </section>
 
   <style>
-    .intro { padding: 64px 0 44px; max-width: 560px; }
-    .intro h1 { font-size: clamp(1.9rem, 3.6vw, 2.4rem); margin-bottom: 14px; }
-    .intro p { color: var(--muted); }
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      align-items: center;
+      gap: 6vw;
+      padding: 64px 0 60px;
+    }
+    .intro-copy { max-width: 560px; }
+    .intro h1 {
+      font-size: clamp(2rem, 4vw, 2.7rem);
+      line-height: 1.12;
+      margin-bottom: 18px;
+    }
+    .intro h1 span { color: var(--magenta); }
+    .lede { color: var(--muted); margin-bottom: 24px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      color: var(--text);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 16px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 0 3px var(--teal-soft);
+    }
+
+    .project-row {
+      display: flex;
+      gap: 18px;
+      margin-top: 30px;
+    }
+    .project-bubble {
+      flex-shrink: 0;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--line);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+      background: var(--panel);
+      animation: bubble-bounce 6s ease-in-out infinite;
+      animation-delay: calc(var(--i) * 0.9s);
+    }
+    .project-bubble img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    @keyframes bubble-bounce {
+      0%, 100% { transform: translateY(0); }
+      10% { transform: translateY(-20px); }
+      20% { transform: translateY(0); }
+    }
 
     .channels {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-width: 480px;
-      margin-bottom: 70px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 90px;
     }
     .channel {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: 20px 24px;
+      padding: 22px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: border-color 0.2s ease, transform 0.2s ease;
+      flex-direction: column;
+      gap: 16px;
+      transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
     }
     .channel:hover {
       border-color: var(--violet-soft);
-      transform: translateY(-2px);
+      background: var(--panel-raised);
+      transform: translateY(-3px);
     }
+    .icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: linear-gradient(150deg, var(--violet-soft), rgba(255, 92, 168, 0.2));
+      color: var(--text);
+    }
+    .icon svg { width: 20px; height: 20px; }
+    .channel-text { display: flex; flex-direction: column; gap: 4px; }
     .label {
       font-family: var(--font-display);
       font-size: 0.85rem;
       color: var(--muted);
     }
-    .value { color: var(--violet); font-size: 0.92rem; }
+    .value {
+      display: block;
+      color: var(--text);
+      font-size: clamp(0.8rem, 1.5vw, 0.98rem);
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .go {
+      align-self: flex-end;
+      margin-top: -28px;
+      color: var(--violet);
+      font-size: 1rem;
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .channel:hover .go { opacity: 1; transform: translateX(0); }
+
+    @media (max-width: 780px) {
+      .intro { grid-template-columns: 1fr; gap: 32px; padding: 48px 0 44px; }
+      /* :global — the figure lives inside <Portrait />, so it carries that
+         component's scope hash, not this page's. */
+      .intro > :global(.intro-photo) { max-width: 320px; margin: 0 auto; order: -1; }
+      .project-row { justify-content: center; flex-wrap: wrap; gap: 12px; }
+      .project-bubble { width: 56px; height: 56px; }
+      .intro-copy { max-width: 100%; }
+      .channels { grid-template-columns: 1fr; }
+    }
   </style>
 </Layout>

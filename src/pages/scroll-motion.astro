@@ -1,4 +1,8 @@
 ---
+// Dev-only prototype: works as normal under `npm run dev`, but the production
+// build turns this route into a redirect home so placeholder copy never ships.
+if (!import.meta.env.DEV) return Astro.redirect("/");
+
 const chapters = [
   {
     id: "one",

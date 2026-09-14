@@ -21,7 +21,7 @@ const capabilities = [
 ];
 ---
 <Layout title="AI" description="AI-assisted content pipelines for game development — character generation, LoRA training, and previs.">
-  <section class="intro">
+  <section class="page-intro">
     <h1>AI-assisted <span class="grad">content pipelines</span></h1>
     <p>
       Alongside engine and gameplay work, I build AI generation pipelines that speed up early
@@ -40,15 +40,14 @@ const capabilities = [
   </section>
 
   <style>
-    .intro { padding: 64px 0 44px; max-width: 620px; }
-    .intro h1 { font-size: clamp(1.9rem, 3.6vw, 2.4rem); margin-bottom: 16px; }
-    .intro h1 .grad {
+    .page-intro { padding-bottom: 44px; }
+    .page-intro h1 .grad {
       background: linear-gradient(135deg, var(--teal), var(--violet));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
-    .intro p { color: var(--muted); font-size: 1.02rem; }
+    .page-intro p { font-size: 1.02rem; }
 
     .capabilities {
       display: grid;

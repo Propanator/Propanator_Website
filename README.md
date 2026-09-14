@@ -1,43 +1,60 @@
 # Propane Games — site
 
-## Run locally
+## Run it
+
 ```bash
 npm install
 npm run dev
 ```
-Open http://localhost:4321
 
-## Build
-```bash
-npm run build
+Opens at http://localhost:4321. Add `-- --host` to test on your phone (same Wi-Fi,
+use the "Network" URL it prints).
+
+`npm run build` writes the static site to `dist/`. Hosting auto-detects Astro —
+build command `npm run build`, output directory `dist`.
+
+## Adding / editing a project
+
+Projects are Markdown files in `src/content/projects/`. Copy any existing one,
+rename it, change the fields. That's it — the projects page, the homepage card
+fan, and the contact-page bubbles all read from these files.
+
+```markdown
+---
+title: "Project Name"
+order: 8                      # position in the timeline, low = first
+featured: true                # false = projects page only (hides from home/contact)
+period: "2025"
+tags: ["VR", "Simulation"]
+image: "/images/your-image.png"
+summary: "One-liner shown on the card."
+details: "Longer description shown when the card is opened."
+role: "What you did on it."
+stack: "Unreal Engine 5, ..."
+video: "https://www.youtube.com/embed/VIDEO_ID?rel=0"   # optional, replaces the image
+links:                        # optional, as many as you want
+  - label: "Trailer"
+    href: "https://..."
+---
+
+Anything written down here (below the frontmatter) is optional and shows up
+as a formatted "notes" section — normal Markdown, so headings, lists, code,
+links all work.
 ```
-Static output goes to `dist/`.
 
-## Deploy
-1. Push this folder to a GitHub repo.
-2. Connect the repo to Cloudflare Pages or Netlify (both auto-detect Astro).
-   - Build command: `npm run build`
-   - Output directory: `dist`
-3. Add your custom domain in the host's dashboard and point DNS as instructed.
+Images go in `public/images/` and are referenced as `/images/whatever.png`.
 
-## Structure
-- `src/pages/` — one file per route (index, projects, ai, contact)
-- `src/layouts/Layout.astro` — shared nav/footer/global styles
-- Colors, fonts, and spacing are all defined as CSS variables at the top of `Layout.astro` — edit there to retheme.
+## Where things live
 
-## Content to fill in
-- Projects page uses placeholder role/stack copy pulled from your bio — tighten with real specifics per project (dates, client names if allowed, screenshots).
-- Swap in actual project screenshots/renders — currently text-only.
-- Demo reel embeds reuse the two YouTube videos from the old Wix site — replace with updated reels if you have them.
+- `src/pages/` — one file per route: `index`, `projects`, `ai`, `contact`.
+- `src/layouts/Layout.astro` — nav, footer, and the colour/font variables.
+  Change a colour there and it changes everywhere.
+- `src/data/site.ts` — your email / Upwork / LinkedIn, used by the footer and
+  the contact page.
+- `src/components/Portrait.astro` — the photo-with-glow used on home and contact.
 
-## Adding real project images
-Drop image files into `public/images/` (e.g. `public/images/pcvr.jpg`), then in
-`src/pages/projects.astro` set that project's `image` field to `/images/pcvr.jpg`.
-Leave it as `""` to keep the gradient placeholder.
+## Prototype pages
 
-## Scroll-snap prototype
-`/scroll-test` is a standalone Apple-style scroll page (full-bleed sections, dot nav
-on the right, IntersectionObserver-driven active state). Not linked from the main nav —
-open it directly at `localhost:4321/scroll-test`. If you like it, the same section
-data/structure can replace the current `projects.astro` grid, or be adapted into a
-single "featured project" scroll experience on the homepage.
+`scroll-test`, `scroll-motion`, `scroll-debug`, `angled-test` in `src/pages/` are
+scratch experiments. They open normally in `npm run dev` but redirect home in
+the real build, so nothing placeholder ever goes live.

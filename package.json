@@ -10,7 +10,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^4.16.0"
+    "astro": "^7.3.2"
   },
   "devDependencies": {
     "simple-icons": "^16.30.0"
