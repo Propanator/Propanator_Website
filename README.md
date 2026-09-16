@@ -10,8 +10,14 @@ npm run dev
 Opens at http://localhost:4321. Add `-- --host` to test on your phone (same Wi-Fi,
 use the "Network" URL it prints).
 
-`npm run build` writes the static site to `dist/`. Hosting auto-detects Astro —
-build command `npm run build`, output directory `dist`.
+`npm run build` writes the static site to `dist/`.
+
+## Deploying
+
+Live at https://propanator.com, hosted on GitHub Pages. Every push to `main`
+runs `.github/workflows/deploy.yml`, which builds the site and publishes it —
+nothing to do by hand. The custom domain is set in the repo's Settings → Pages,
+and `public/CNAME` keeps it pinned.
 
 ## Adding / editing a project
 
@@ -46,7 +52,8 @@ Images go in `public/images/` and are referenced as `/images/whatever.png`.
 
 ## Where things live
 
-- `src/pages/` — one file per route: `index`, `projects`, `ai`, `contact`.
+- `src/pages/` — one file per route: `index`, `projects`, `contact`, `404`
+  (`ai` is parked: dev-only until it's ready).
 - `src/layouts/Layout.astro` — nav, footer, and the colour/font variables.
   Change a colour there and it changes everywhere.
 - `src/data/site.ts` — your email / Upwork / LinkedIn, used by the footer and

@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+// GitHub Pages serves dist/404.html for any unknown URL.
+---
+<Layout title="Page not found" description="That page doesn't exist.">
+  <section class="page-intro">
+    <p class="eyebrow">404</p>
+    <h1>Nothing <span>here</span></h1>
+    <p>
+      That link is dead or the page moved. Head back <a href="/">home</a> or browse the
+      <a href="/projects">projects</a>.
+    </p>
+  </section>
+
+  <style>
+    .page-intro { padding-bottom: 120px; }
+    .page-intro a { color: var(--gold); }
+    .page-intro a:hover { color: var(--gold-deep); }
+  </style>
+</Layout>
