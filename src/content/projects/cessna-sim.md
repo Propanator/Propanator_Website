@@ -1,13 +1,20 @@
 ---
 title: "Cessna Flight Simulator"
-order: 7
-# Reusing the helicopter image as a placeholder — flip to true once it has its own.
+order: 90
 featured: false
-period: "2021–22"
 tags: ["VR", "Simulation", "Aviation"]
-image: "/images/card-heli-sim.png"
-summary: "A full pre-flight-to-liftoff VR trainer built to cut down required flight hours for new pilots."
-details: "A VR simulation covering the full pre-flight check, startup, taxiing, and takeoff of a Cessna with complete object interaction, built to reduce required flight hours for future pilots."
-role: "Senior simulation developer — checklist systems, flight systems, and the UE4-to-UE5 engine upgrade."
-stack: "Unreal Engine 4/5, JSBSim"
+image: "/images/card-cessna.png"
+summary: "A VR flight trainer covering everything from the pre-flight check to lift-off, built to cut the flight hours new pilots need."
+details: "A VR simulation built to reduce the flight hours required of future pilots. It covers the full pre-flight check, pre-flight test and start-up, then taxiing and take-off, with full VR interaction on every part of the aircraft."
+role: "Senior Simulation Developer"
+stack: "Unreal Engine 4 → 5, JSBSim"
 ---
+
+## Responsibilities
+
+- Recreated a fully functional Cessna with a 3D artist, using JSBSim for the flight model
+- Checklist system that interacts with the plane's parts for the start-up procedure
+- VR interactions for every part and tool of the aircraft
+- Flight system implementation
+- Upgraded the project from Unreal Engine 4 to 5
+- UI/UX

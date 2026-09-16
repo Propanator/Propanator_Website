@@ -9,7 +9,7 @@ const { title, description = "Senior Unreal Engine developer specializing in VR,
 const nav = [
   { href: "/", label: "Home" },
   { href: "/projects", label: "Projects" },
-  { href: "/ai", label: "AI" },
+  // AI page is parked for now — src/pages/ai.astro is dev-only until it's ready.
   { href: "/contact", label: "Contact" },
 ];
 const currentPath = Astro.url.pathname;
@@ -24,7 +24,7 @@ const currentPath = Astro.url.pathname;
     <title>{title} · Propane Games</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div class="glow glow-a" aria-hidden="true"></div>
@@ -76,8 +76,8 @@ const currentPath = Astro.url.pathname;
         --teal-soft: rgba(34, 211, 184, 0.35);
         --text: #f1f0f7;
         --muted: #9a96ac;
-        --font-display: "Space Grotesk", sans-serif;
-        --font-body: "Inter", sans-serif;
+        --font-display: "Unbounded", sans-serif;
+        --font-body: "Plus Jakarta Sans", sans-serif;
         --radius: 16px;
       }
 

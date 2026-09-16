@@ -63,14 +63,14 @@ const tech = [
       <section class="hero">
         <div class="hero-scrim" aria-hidden="true"></div>
         <div class="hero-inner">
-          <h1>Every project, <span>built to ship.</span></h1>
+          <h1>Building the future <span>together</span></h1>
           <p class="hero-sub">
-            7+ years shipping VR experiences, training simulations, and geospatial tools in UE5 and C++.
-            Freelance under Propane Games — currently taking on new contract work.
+            8+ years shipping VR experiences, training simulations, games and everything in between.
+            From design to development, any of your projects will come to life.
           </p>
           <div class="cta-row">
             <div class="cta-squiggle" aria-hidden="true"></div>
-            <a class="cta" href="/contact">Find out more</a>
+            <a class="cta" href="/contact">Get in touch</a>
           </div>
         </div>
       </section>
@@ -83,14 +83,11 @@ const tech = [
             <p class="eyebrow">About me</p>
             <h2>Louis Charles La Manna</h2>
             <p>
-              Resourceful senior Unreal Engine developer and level designer with over seven years of
-              experience specializing in VR development, simulation, and networking. I hold an AEC in
-              Level and Game Design from Interdec College and work fluently in both French and English.
+              Senior game & simulation developer with eight years of experience across VR, mobile, simulation, and
+              games, backed by an AEC in Level and Game Design from Inter-Dec College. Fluent in French and English.
             </p>
             <p>
-              My work spans PCVR brand activations, healthcare training simulations, a geospatial
-              helicopter simulator built on Cesium, and heritage site experiences — with a growing focus
-              on AI-assisted content pipelines to speed up asset and previz work.
+              I've built multiplayer healthcare training platforms with MetaHuman-driven characters, a helicopter                 pre-flight simulator, and shipped games like a mobile pet-care title with LLM-driven behaviors and a                 social VR board game on Quest. I care about clean architecture as much as the final polish.
             </p>
             <div class="about-actions">
               <a class="about-link" href="/projects">See the work →</a>
@@ -106,22 +103,24 @@ const tech = [
            here as the no-JS floor; the script below clones as many more as the
            viewport needs, so the rail always overflows the screen. -->
       <section class="techstrip" aria-label="Tools and platforms">
-        <div class="tech-rail">
-          {[0, 1].map((copy) => (
-            <ul class="tech-track" aria-hidden={copy === 1 ? "true" : undefined}>
-              {tech.map((t) => (
-                <li class="tech-item" title={t.name}>
-                  {t.path ? (
-                    <svg viewBox="0 0 24 24" role="img" aria-label={t.name}>
-                      <path d={t.path} />
-                    </svg>
-                  ) : (
-                    <span class="tech-word">{t.word}</span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          ))}
+        <div class="tech-window">
+          <div class="tech-rail">
+            {[0, 1].map((copy) => (
+              <ul class="tech-track" aria-hidden={copy === 1 ? "true" : undefined}>
+                {tech.map((t) => (
+                  <li class="tech-item" title={t.name}>
+                    {t.path ? (
+                      <svg viewBox="0 0 24 24" role="img" aria-label={t.name}>
+                        <path d={t.path} />
+                      </svg>
+                    ) : (
+                      <span class="tech-word">{t.word}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -129,16 +128,16 @@ const tech = [
         <div class="cards-wrap">
           <div class="cards">
             {cards.map((c) => (
-              <div class="card">
-                <img src={c.src} alt={c.alt} loading="lazy" />
-              </div>
+              <a class="card" href="/projects" aria-label={`${c.alt} on the projects page`}>
+                <img src={c.src} alt="" loading="lazy" />
+              </a>
             ))}
           </div>
         </div>
         <div class="work-text">
-          <h2>World-class builds, for world-class studios</h2>
-          <p>A mix of shipped brand activations, simulation platforms, and creative experiments —
-            see the full breakdown on the projects page.</p>
+          <h2>Projects built to last</h2>
+          <p> Simulation, training tools, interactive experiences, and games for headsets, phones, PC, console and             event floors. Whatever you need built, it's made to hold up in front of the people who
+            actually use it.</p>
           <a class="work-link" href="/projects">View all projects →</a>
         </div>
       </section>
@@ -149,11 +148,14 @@ const tech = [
       <h2>Demo reel</h2>
       <div class="reel-grid">
         <div class="video-wrap">
+          <span class="reel-note">Outdated reel, will update shortly</span>
           <iframe
-            src="https://www.youtube.com/embed/MtKvIDYAfFk?wmode=transparent&rel=0"
+            src="https://www.youtube.com/embed/MtKvIDYAfFk?rel=0"
             title="Propane Games demo reel"
             loading="lazy"
             allowfullscreen
+            referrerpolicy="strict-origin-when-cross-origin"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           ></iframe>
         </div>
       </div>
@@ -254,23 +256,31 @@ const tech = [
     }
     .cta:hover { transform: translateY(-2px); }
 
-    /* Diagonal band bleeding across the hero/work seam. Visible from the
-       start at a shorter length, then grows down toward its full height as
-       the page scrolls a little — driven by --bridge-grow, set in the
-       scroll listener below. transform-origin keeps the top edge anchored
-       so it extends downward rather than scaling from the center. */
+    /* Diagonal band on the hero photo that grows down across the hero/about
+       seam as the page scrolls — driven by --bridge-grow (0.5 → 1), set in
+       the scroll listener below. Geometry is anchored to the seam: the hero
+       is 78vh tall, so `top: 78vh - 260px` puts the band's top 260px above
+       the seam regardless of viewport height; at the resting scale of 0.5
+       the visible 245px ends just above the seam (fully on the photo), and at
+       full height it reaches 230px past it. transform-origin keeps the top
+       edge pinned so it extends downward rather than scaling from the middle. */
     .bridge-band {
       position: absolute;
-      top: clamp(280px, calc(78vh - 220px), 900px);
+      top: calc(79.5vh - 260px);
       right: 8%;
       width: clamp(90px, 8vw, 170px);
-      height: 420px;
+      height: 490px;
       background: linear-gradient(160deg, var(--gold), var(--gold-deep));
-      transform: skewX(-26deg) scaleY(var(--bridge-grow, 0.75));
+      transform: skewX(-34deg) scaleY(var(--bridge-grow, 0.5));
       transform-origin: top;
       z-index: 5;
       pointer-events: none;
       will-change: transform;
+    }
+    /* Short viewports (landscape phones): the hero is only ~330px tall, so
+       shrink the whole thing to keep the same seam-relative behaviour. */
+    @media (max-height: 560px) {
+      .bridge-band { top: calc(78vh - 170px); height: 320px; }
     }
 
     /* Gentle wave squiggle drawn across the seam between hero and work */
@@ -313,20 +323,34 @@ const tech = [
     .about-link { color: var(--magenta); font-weight: 600; font-size: 0.92rem; }
     .about-link:hover { text-decoration: underline; }
 
-    /* Tech strip: one continuous rail of marks, full page width. */
+    /* Tech strip: one continuous rail of marks. The box is shaped to sit on
+       the squiggle line: its left edge on the line's left run and its
+       top-left corner matching the bend there (--line-inset / --line-radius
+       are set by the line script from the exact values it draws with; the
+       clamps are only a no-JS fallback). On the right it runs square off the
+       edge of the screen, with the line landing on its top edge. The top is
+       softened but not faded out — too transparent and the corner vanishes,
+       which reads as a mismatch with the line. */
     .techstrip {
       position: relative;
       z-index: 6;
+      margin-inline: var(--line-inset, clamp(14px, 3vw, 70px)) 0;
       padding: 30px 0 34px;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      background: rgba(22, 21, 31, 0.6);
+      border-radius: var(--line-radius, clamp(40px, 9vw, 180px)) 0 0 0;
+      background: linear-gradient(180deg, rgba(22, 21, 31, 0.55) 0%, rgba(22, 21, 31, 0.78) 40%, rgba(22, 21, 31, 0.9) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 -10px 18px rgba(0, 0, 0, 0.35),
+        0 20px 40px rgba(0, 0, 0, 0.4);
       overflow: hidden;
       /* Fades the marks out at both edges so items enter and leave the rail
          instead of popping at a hard boundary. Tune the stops here only —
          both mask declarations below read the same gradient, so Chrome and
-         Firefox can't drift apart again. */
-      --strip-fade: linear-gradient(90deg, transparent 3%, #000 5%, #000 91%, transparent);
+         Firefox can't drift apart again. Applied to .tech-window, not the
+         strip itself, so the box keeps its shape and only the logos fade. */
+      --strip-fade: linear-gradient(90deg, transparent 2.5%, #000 4.5%, #000 91%, transparent);
+    }
+    .tech-window {
       -webkit-mask-image: var(--strip-fade);
       mask-image: var(--strip-fade);
     }
@@ -343,7 +367,6 @@ const tech = [
       animation-name: tech-scroll-measured;
       animation-duration: var(--tech-dur, 42s);
     }
-    .techstrip:hover .tech-rail { animation-play-state: paused; }
     .tech-track {
       display: flex;
       align-items: center;
@@ -393,6 +416,7 @@ const tech = [
 
     .cards { position: relative; z-index: 1; display: flex; }
     .card {
+      display: block;
       width: 200px;
       height: 340px;
       overflow: hidden;
@@ -415,7 +439,7 @@ const tech = [
        squiggle-line's SVG layer, so a trailing margin here collapses through
        and never actually extends the layer's own height, leaving the line's
        "below the reel" run with no real room. Padding always counts. */
-    .reel { margin: 40px 0 0; padding-bottom: 200px; }
+    .reel { margin: 40px 0 0; padding-bottom: 150px; }
     .reel h2 { font-size: 1.6rem; margin-bottom: 28px; }
 
     .reel-grid { display: grid; grid-template-columns: 1fr; max-width: 900px; margin: 0 auto; }
@@ -429,6 +453,24 @@ const tech = [
       box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
     }
     .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    /* Placeholder notice pinned to the frame's corner; pointer-events off so
+       it never gets in the way of the player. */
+    .reel-note {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 1;
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--bg);
+      background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+      border-radius: 999px;
+      padding: 7px 14px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+      pointer-events: none;
+    }
 
     @media (max-width: 780px) {
       .hero { min-height: 60vh; background-position: 60% center; }
@@ -438,7 +480,9 @@ const tech = [
           linear-gradient(90deg, rgba(12,11,22,0.94) 0%, rgba(12,11,22,0.86) 60%, rgba(12,11,22,0.70) 100%);
       }
       .hero-inner { max-width: 100%; padding: 0 7vw; }
-      .bridge-band { top: calc(60vh - 90px); height: 200px; width: clamp(60px, 16vw, 110px); right: 4%; }
+      /* Hero is 60vh here: top sits 130px above the seam, so the resting
+         120px stays on the photo and full height reaches 110px past it. */
+      .bridge-band { top: calc(60vh - 130px); height: 240px; width: clamp(60px, 16vw, 110px); right: 4%; }
       .work { flex-direction: column; align-items: flex-start; padding: 90px 6vw; }
       .card { width: 130px; height: 240px; margin-left: -22px; }
       .about { padding: 80px 6vw 70px; }
@@ -471,8 +515,8 @@ const tech = [
     // the page scrolls down a little, rather than a one-shot entrance.
     const bridgeBand = document.querySelector<HTMLElement>(".bridge-band");
     if (bridgeBand) {
-      const BRIDGE_GROW_START = 0.75;
-      const BRIDGE_SCROLL_RANGE = 220;
+      const BRIDGE_GROW_START = 0.5;
+      const BRIDGE_SCROLL_RANGE = 420;
       const updateBridgeGrow = () => {
         const progress = Math.min(Math.max(window.scrollY / BRIDGE_SCROLL_RANGE, 0), 1);
         const grow = BRIDGE_GROW_START + (1 - BRIDGE_GROW_START) * progress;
@@ -529,7 +573,7 @@ const tech = [
       // shorter neighbouring run, so long runs get wide sweeping bends.
       const radiusFor = (w: number) => clamp(w * 0.09, 40, 180);
 
-      type Pt = { x: number; y: number };
+      type Pt = { x: number; y: number; r?: number };
 
       // Hidden path used only to measure the route before the squiggle is
       // applied. It never paints; it exists so the browser can hand back
@@ -539,7 +583,10 @@ const tech = [
       spine.setAttribute("stroke", "none");
       svgEl.appendChild(spine);
 
-      // Walks a list of waypoints, rounding each turn.
+      // Walks a list of waypoints, rounding each turn with a true circular
+      // arc. Arcs (not quadratic curves) so the bends match CSS border-radius
+      // exactly — the tech strip's corner is shaped to sit under one of them.
+      // A waypoint can carry its own `r` to override the shared radius.
       function route(pts: Pt[], radius: number): string {
         let d = "M " + pts[0].x + " " + pts[0].y;
         for (let i = 1; i < pts.length - 1; i++) {
@@ -548,12 +595,19 @@ const tech = [
           const next = pts[i + 1];
           const dIn = Math.hypot(p.x - prev.x, p.y - prev.y) || 1;
           const dOut = Math.hypot(next.x - p.x, next.y - p.y) || 1;
-          const r = Math.min(radius, dIn / 2, dOut / 2);
-          const aX = p.x + ((prev.x - p.x) / dIn) * r;
-          const aY = p.y + ((prev.y - p.y) / dIn) * r;
-          const bX = p.x + ((next.x - p.x) / dOut) * r;
-          const bY = p.y + ((next.y - p.y) / dOut) * r;
-          d += " L " + aX + " " + aY + " Q " + p.x + " " + p.y + ", " + bX + " " + bY;
+          const r = Math.min(p.r ?? radius, dIn / 2, dOut / 2);
+          const inX = (p.x - prev.x) / dIn;
+          const inY = (p.y - prev.y) / dIn;
+          const outX = (next.x - p.x) / dOut;
+          const outY = (next.y - p.y) / dOut;
+          const aX = p.x - inX * r;
+          const aY = p.y - inY * r;
+          const bX = p.x + outX * r;
+          const bY = p.y + outY * r;
+          // Sweep flag follows the turn direction (y-down coords: positive
+          // cross product = clockwise = sweep 1).
+          const sweep = inX * outY - inY * outX > 0 ? 1 : 0;
+          d += " L " + aX + " " + aY + " A " + r + " " + r + " 0 0 " + sweep + " " + bX + " " + bY;
         }
         const last = pts[pts.length - 1];
         d += " L " + last.x + " " + last.y;
@@ -626,9 +680,22 @@ const tech = [
         const xR = W - inset;
         const overshoot = Math.max(amp * 3, 44);
 
+        // The tech strip's box is shaped to sit under the line: left edge on
+        // the left run, top-left corner under the bend there. CSS silently
+        // shrinks a border-radius that's taller than the box (the strip is
+        // only ~100px tall, the bend up to 180px), so the bend at that corner
+        // is capped at the strip's height and the box gets the very same
+        // number — one source, so the two can never disagree.
+        const stripRadius = Math.min(radiusFor(W), techEl.getBoundingClientRect().height);
+        techEl.style.setProperty("--line-inset", inset + "px");
+        techEl.style.setProperty("--line-radius", stripRadius + "px");
+
         const seam = bottom(heroEl);                              // hero photo edge
-        const gapAbout = between(bottom(aboutEl), top(techEl));   // under About, over the tech strip
-        const gapWork = between(bottom(workEl), top(reelEl));     // under "world-class", over the demo reel
+        const gapAbout = top(techEl);                             // lands right on the tech strip's top edge
+        // The work/reel gap is only the reel's 40px top margin, so the true
+        // midpoint hugs the reel heading; lift the run into the work section's
+        // empty bottom padding instead.
+        const gapWork = between(bottom(workEl), top(reelEl)) - 22;  // under the work text, over the demo reel
         const belowReel = between(bottom(reelEl), H);             // under the demo reel
 
         spine.setAttribute(
@@ -638,7 +705,7 @@ const tech = [
               { x: -overshoot, y: seam }, // enters from off the left edge
               { x: xR, y: seam },
               { x: xR, y: gapAbout },
-              { x: xL, y: gapAbout },
+              { x: xL, y: gapAbout, r: stripRadius }, // the bend the strip's corner sits under
               { x: xL, y: gapWork },
               { x: xR, y: gapWork },
               { x: xR, y: belowReel }, // down the side of the demo reel

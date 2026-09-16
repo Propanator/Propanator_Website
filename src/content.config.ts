@@ -11,7 +11,10 @@ const projects = defineCollection({
     // bouncing bubbles on the contact page. Set false to keep a project
     // on the projects page only (e.g. while its image is still a placeholder).
     featured: z.boolean().default(true),
-    period: z.string(),
+    // Optional meta line under the title on the card: studio · platform · period.
+    studio: z.string().optional(),
+    platform: z.string().optional(),
+    period: z.string().optional(),
     tags: z.array(z.string()),
     image: z.string(),
     summary: z.string(),

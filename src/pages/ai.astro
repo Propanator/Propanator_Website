@@ -1,6 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
+// Parked for now: reachable under `npm run dev`, redirects home in the
+// production build. Add it back to the nav in Layout.astro when it's ready.
+if (!import.meta.env.DEV) return Astro.redirect("/");
+
 const capabilities = [
   {
     title: "Character asset generation",
