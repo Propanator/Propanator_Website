@@ -3,7 +3,7 @@ title: "Cessna Flight Simulator"
 order: 90
 featured: false
 tags: ["VR", "Simulation", "Aviation"]
-image: "/images/card-cessna.png"
+image: "/images/card-cessna.webp"
 summary: "A VR flight trainer covering everything from the pre-flight check to lift-off, built to cut the flight hours new pilots need."
 details: "A VR simulation built to reduce the flight hours required of future pilots. It covers the full pre-flight check, pre-flight test and start-up, then taxiing and take-off, with full VR interaction on every part of the aircraft."
 role: "Senior Simulation Developer"

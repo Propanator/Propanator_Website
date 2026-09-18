@@ -3,7 +3,7 @@ title: "State Street Liquidity Maze"
 order: 60
 tags: ["VR"]
 studio: "Preymaker"
-image: "/images/card-flamingo.png"
+image: "/images/card-flamingo.webp"
 summary: "An immersive, panoramic VR maze through environments built by film VFX artists, for State Street Global Advisors."
 details: "Navigate a maze full of twists and turns through stunning environments created by some of the best digital artists in the world. Built with Preymaker for State Street Global Advisors to gamify liquidity challenges."
 role: "Lead Developer"

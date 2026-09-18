@@ -4,7 +4,7 @@ order: 30
 tags: ["VR", "Geospatial", "Aviation", "Simulation"]
 studio: "I-nstein"
 platform: "PC / PCVR"
-image: "/images/card-instein-flight.png"
+image: "/images/card-instein-flight.webp"
 summary: "A custom UE5 flight simulator for the I-nstein geospatial platform: plan a flight path anywhere in the world in the web app, then fly it over Cesium terrain on PC or in PCVR."
 details: "Built for I-nstein's geospatial intelligence platform. Flights are planned in the I-nstein web app, anywhere on Earth, and the UE5 system pulls them in through the API and flies the route over real-world Cesium terrain with a live HUD showing speed, heading, altitude above sea level and above ground, and the next waypoint. It runs on PC or in PCVR, with multiple points of view (cockpit seat, under the helicopter, aerial eye view) and extra objects placed along the route, all configured from the API side. The whole system was custom built in Unreal Engine 5."
 role: "Unreal Engine 5 Developer"

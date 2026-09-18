@@ -5,7 +5,7 @@ tags: ["Game", "iOS", "Simulation"]
 studio: "Starchild PBC"
 platform: "iOS"
 # Swap for /images/card-starchild.png once that file is in public/images/.
-image: "/images/card-puppy-vr.png"
+image: "/images/card-puppy-vr.webp"
 summary: "A mobile virtual pet game where you raise, pet, and play with a dog through touch-driven interaction and physics-based mini-games, built in UE5 for iOS."
 details: "StarChild is an iOS virtual pet experience built around a fully reactive dog character. A touch-driven petting system blends IK and morph targets in real time so the dog responds naturally wherever it's touched, backed by a data-driven emotional state system that drives its moods and micro-reactions. Includes Nose Basket, a physics-based arcade mini-game where the dog's nose doubles as a slingshot."
 role: "Lead Unreal Engine Developer"

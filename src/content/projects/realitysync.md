@@ -5,7 +5,7 @@ featured: false
 tags: ["Digital Twin", "Geospatial", "Simulation"]
 studio: "Preference Consulting"
 platform: "PC"
-image: "/images/card-realitysync-heritage.png"
+image: "/images/card-realitysync-heritage.webp"
 summary: "Two UE5 experiences built on RealitySync point-cloud scans: a flying tour of a heritage site, and a live-CCTV digital twin of a school, with Cesium filling in the surroundings."
 details: "Two implementations of RealitySync scans, both built in Unreal Engine 5 with Cesium tiles filling the world around the captured areas. The first turns a scanned heritage site into a flying mini-game, deployed on site at the location itself: you glide around as a bird, collecting markers while being told about each part of the site. The second is a security view of a school, where the point-cloud map is the backdrop for live CCTV feeds decoded through FFmpeg — jump between cameras or move freely around the map to see each location in context. Point-cloud maps are GPU hogs, so a big part of the work was optimizing the scenes to run smoothly."
 role: "Unreal Engine 5 Developer"
@@ -26,7 +26,7 @@ links:
 - Live camera feeds decoded with FFmpeg and placed inside the point-cloud map at each camera's real position
 - Switch between cameras, or move freely around the map to see each feed in context
 
-![Live CCTV feed placed inside the school's point-cloud map](/images/realitysync-cctv.png)
+![Live CCTV feed placed inside the school's point-cloud map](/images/realitysync-cctv.webp)
 
 ## Under the hood
 

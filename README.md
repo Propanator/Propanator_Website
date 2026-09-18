@@ -49,6 +49,9 @@ links all work.
 ```
 
 Images go in `public/images/` and are referenced as `/images/whatever.png`.
+Drop in whatever you have, then run `npm run shrink`: anything over 300 KB is
+converted to WebP (max 1600 px wide) and every reference in `src/` is updated
+for you. Keeps the projects page fast on phones.
 
 ## Where things live
 
@@ -59,6 +62,9 @@ Images go in `public/images/` and are referenced as `/images/whatever.png`.
 - `src/data/site.ts` — your email / Upwork / LinkedIn, used by the footer and
   the contact page.
 - `src/components/Portrait.astro` — the photo-with-glow used on home and contact.
+- `public/images/og-card.jpg` — the preview card shown when the link is pasted
+  into LinkedIn / Discord / iMessage. `Layout.astro` points every page at it.
+- `scripts/shrink-images.mjs` — what `npm run shrink` runs.
 
 ## Prototype pages
 

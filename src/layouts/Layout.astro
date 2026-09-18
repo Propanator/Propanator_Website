@@ -13,6 +13,13 @@ const nav = [
   { href: "/contact", label: "Contact" },
 ];
 const currentPath = Astro.url.pathname;
+
+// Social previews (LinkedIn, Discord, iMessage, Slack...) and search engines.
+// The card is public/images/og-card.jpg; regenerate it if the portrait changes.
+const pageTitle = `${title} · ${site.name}`;
+const shareTitle = currentPath === "/" ? `${site.name} · ${site.owner}` : pageTitle;
+const canonical = new URL(currentPath, Astro.site).href;
+const shareImage = new URL("/images/og-card.jpg", Astro.site).href;
 ---
 <!doctype html>
 <html lang="en">
@@ -21,7 +28,21 @@ const currentPath = Astro.url.pathname;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="description" content={description} />
-    <title>{title} · Propane Games</title>
+    <title>{pageTitle}</title>
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={shareTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={shareImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.owner}, ${site.name}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={shareTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={shareImage} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
