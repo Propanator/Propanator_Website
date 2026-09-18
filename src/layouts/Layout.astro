@@ -71,7 +71,7 @@ const shareImage = new URL("/images/og-card.jpg", Astro.site).href;
     </main>
 
     <footer class="site-footer">
-      <p>{site.name} — {site.owner}</p>
+      <p>{site.name} — <span class="nowrap">{site.owner}</span></p>
       <div class="footer-links">
         {contactChannels.map((c) => (
           <a href={c.href} target={c.external ? "_blank" : undefined} rel={c.external ? "noopener" : undefined}>
@@ -225,6 +225,7 @@ const shareImage = new URL("/images/og-card.jpg", Astro.site).href;
         z-index: 1;
       }
       .site-footer p { color: var(--muted); font-size: 0.85rem; margin-top: 24px; }
+      .site-footer .nowrap { white-space: nowrap; }
       .footer-links { display: flex; gap: 20px; margin-top: 10px; }
       .footer-links a { font-size: 0.85rem; color: var(--muted); }
       .footer-links a:hover { color: var(--violet); }
