@@ -1,6 +1,6 @@
 export const site = {
   name: "Propane Games",
-  owner: "Louis-Charles La Manna",
+  owner: "Louis Charles La Manna",
   email: "louischarles.lamanna@icloud.com",
   upwork: "https://www.upwork.com/freelancers/~01d363ad82ef101190",
   linkedin: "https://www.linkedin.com/in/louis-charles-la-manna-harvey-244191164/",
